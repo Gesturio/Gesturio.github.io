@@ -1,0 +1,28 @@
+{
+  "name": "gesturio",
+  "version": "1.0.0",
+  "description": "Gesturio project for 3DJam\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D#3dJam",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Gesturio/Gesturio.github.io.git"
+  },
+  "keywords": [
+    "Leap",
+    "motion",
+    "#3DJAm"
+  ],
+  "author": "Aitem",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Gesturio/Gesturio.github.io/issues"
+  },
+  "homepage": "https://github.com/Gesturio/Gesturio.github.io#readme",
+  "devDependencies": {
+    "webpack": "^1.12.2",
+    "webpack-dev-server": "^1.12.0"
+  }
+}
