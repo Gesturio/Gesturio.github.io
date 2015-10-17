@@ -3,9 +3,6 @@
   "version": "1.0.0",
   "description": "Gesturio project for 3DJam\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D#3dJam",
   "main": "index.js",
-  "scripts": {
-    "test": "test"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Gesturio/Gesturio.github.io.git"
@@ -23,6 +20,22 @@
   "homepage": "https://github.com/Gesturio/Gesturio.github.io#readme",
   "devDependencies": {
     "webpack": "^1.12.2",
-    "webpack-dev-server": "^1.12.0"
+    "webpack-dev-server": "^1.12.0",
+    "extract-text-webpack-plugin": "latest",
+    "file-loader": "latest",
+    "http-server": "latest",
+    "coffee": "latest",
+    "coffee-loader": "latest",
+    "coffee-script": "latest",
+    "less-loader": "latest",
+    "css-loader": "latest",
+    "style-loader": "latest",
+    "html-loader": "latest",
+    "file-loader": "latest",
+    "jade": "latest"
+  },
+  "scripts": {
+    "test": "test",
+    "start": "`npm bin`/webpack-dev-server --port 5000 --progress --host 0.0.0.0 --colors"
   }
 }
