@@ -2,7 +2,7 @@ var path = require("path");
 var etx = require("extract-text-webpack-plugin");
 module.exports = {
     context: __dirname,
-    entry: "./src/app.js",
+    entry: "./src/app.coffee",
     output: {
         path: path.join(__dirname, "dist"),
         filename: "app.js"
