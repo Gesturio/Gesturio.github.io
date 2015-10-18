@@ -42,18 +42,10 @@
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ function(module, exports, __webpack_require__) {
-
-	__webpack_require__(1);
+/***/ function(module, exports) {
 
 	console.log("hello");
 
-
-/***/ },
-/* 1 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = __webpack_require__.p + "/index.html"
 
 /***/ }
 /******/ ]);
