@@ -8,7 +8,7 @@
     min-width: 800px;
 }
 #connect-leap {
-    display: none !important;
+  top: 27px !important;
 }
 .gesture {
     margin-bottom: 10px;

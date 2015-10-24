@@ -5,6 +5,14 @@ var rev = require('gulp-rev');
 var ecstatic = require('ecstatic');
 var serverport = 8000;
 var  http = require('http');
+var clean = require('gulp-clean');
+var dist = "./dist/**/*";
+
+
+gulp.task('clear', function() {
+  gulp.src(dist)
+    .pipe(clean())
+});
 
 gulp.task('build', function() {
   gulp.src('./src/img/*')

@@ -16,9 +16,7 @@ requirejs.config({
         transform    : 'leap.transform',
         leap_plugins : 'leap-plugins-0.1.6.1',
         gestures_sets   : 'gestures_sets',
-        leap_plugins_10 : 'leap-plugins-0.1.10',
-        leap_rigged     : 'leap.rigged-hand-0.1.4.min',
-        leap_rigged_17  : 'leap.rigged-hand-0.1.7'
+        leap_rigged     : 'leap.rigged-hand-0.1.4.min'
     },
     shim: {
         'app' : {
@@ -32,9 +30,6 @@ requirejs.config({
         'gesture' : {
             deps : ['gestures_sets', 'linear', 'fuzzyset', 'metrics']
         },
-        'bootstrap'  : {
-            deps : ['jquery']
-        },
         'transform'  : {
             deps : ['leap']
         },
@@ -46,9 +41,6 @@ requirejs.config({
         },
         'leap_rigged' : {
             deps : ['leap_plugins', 'transform']
-        },
-        'leap_rigged_17' : {
-            deps : ['leap_plugins_10']
         }
     }
 });
