@@ -7,21 +7,24 @@ var serverport = 8000;
 var  http = require('http');
 
 gulp.task('build', function() {
-    gulp.src('./src/img/*')
-        .pipe(rev())
-        .pipe(gulp.dest('./dist/img/'))
+  gulp.src('./src/img/*')
+    .pipe(rev())
+    .pipe(gulp.dest('./dist/img/'))
 
-    gulp.src('./src/*.jade')
-        .pipe(jade())
-        .pipe(assetRev({connecter: '-'}))
-        .pipe(gulp.dest('./dist/'))
+  gulp.src('./src/*.jade')
+    .pipe(jade())
+    .pipe(assetRev({connecter: '-'}))
+    .pipe(gulp.dest('./dist/'))
+
+  gulp.src('./src/**/*')
+    .pipe(gulp.dest('./dist/'))
 });
 
 gulp.task('watch', function() {
-    gulp.watch('./src/*.jade', ['build']);
+    gulp.watch('./src/**/*', ['build']);
 });
 
-gulp.task('server', ['watch'], function() {
+gulp.task('server', ['build', 'watch'], function() {
     http.createServer(ecstatic({ root: __dirname + '/dist', index: "index.html" })).listen(serverport);
 });
 

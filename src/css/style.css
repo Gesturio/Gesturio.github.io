@@ -1,0 +1,31 @@
+#visualizer > canvas{
+    /*width: 500px !important;
+    height: 500px !important;*/
+    position: inherit !important;
+    border: 1px solid gray;
+}
+#grs{
+    min-width: 800px;
+}
+#connect-leap {
+    display: none !important;
+}
+.gesture {
+    margin-bottom: 10px;
+}
+.gesture .probability{
+    width: 150px;
+    height: 20px;
+    display: inline-block;
+    float: right;
+    border: 1px solid gray;
+}
+.gesture .probability_val{
+    background: red;
+    display: inline-block;
+    height: 20px;
+}
+.decision{
+    font-size: 70px;
+    color: green;
+}
