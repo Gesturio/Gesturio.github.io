@@ -24,7 +24,6 @@ gulp.task('clear', function() {
 gulp.task('less', function () {
   gulp.src('./src/style/style.less')
     .pipe(less())
-    .pipe(minifyCSS())
     .pipe(gulp.dest('./dist/'));
 });
 
@@ -37,10 +36,8 @@ gulp.task('img', function(){
 gulp.task('js', function(){
   gulp.src('./src/js/*.coffee')
     .pipe(coffee({bare: true}).on('error', gutil.log))
-    //.pipe(uglify())
     .pipe(gulp.dest('./dist/js/'));
   gulp.src('./src/js/**/*.js')
-    //.pipe(uglify())
     .pipe(gulp.dest('./dist/js/'))
 });
 
@@ -64,3 +61,24 @@ gulp.task('server', ['build', 'watch'], function() {
     }));
 });
 
+gulp.task('release', function(){
+  var release = "./release/";
+  gulp.src('./src/style/style.less')
+    .pipe(less())
+    .pipe(minifyCSS())
+    .pipe(gulp.dest(release));
+
+  gulp.src('./src/img/*')
+    .pipe(rev())
+    .pipe(gulp.dest(release+'img/'))
+
+  gulp.src('./src/js/*.coffee')
+    .pipe(coffee({bare: true}).on('error', gutil.log))
+    .pipe(uglify())
+    .pipe(gulp.dest(release+'js/'));
+  gulp.src('./src/js/**/*.js')
+    .pipe(uglify())
+    .pipe(gulp.dest(release+'js/'))
+  gulp.src('./src/index.html')
+    .pipe(gulp.dest(release))
+});
