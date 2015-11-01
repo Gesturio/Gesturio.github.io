@@ -1,3 +1,44 @@
+@import "reset";
+@import "layout";
+
+#grs{
+  min-width: 800px;
+}
+
+#task{
+  .word {
+    text-align: center;
+    letter-spacing: 8px;
+    .char{
+      display: inline-block;
+      font-size: 50px;
+      color: #aaa;
+      font-weight: bold;
+
+      &.correct {
+        color: green;
+      }
+      &.wrong {
+        color: red;
+      }
+
+    }
+  }
+}
+
+#progress {
+  display: block;
+  background: #ddd;
+  height: 10px;
+  width: 100%;
+  .done {
+    background: forestgreen;
+    width: 80%;
+    height: 10px;
+  }
+}
+
+
 #visualizer {
   position: relative;
   height: 400px;
@@ -8,28 +49,9 @@
     height: 100% !important;
   }
 }
-#grs{
-    min-width: 800px;
-}
 #connect-leap {
-  top: 27px !important;
+  top: 90px !important;
 }
 .gesture {
     margin-bottom: 10px;
-}
-.gesture .probability{
-    width: 150px;
-    height: 20px;
-    display: inline-block;
-    float: right;
-    border: 1px solid gray;
-}
-.gesture .probability_val{
-    background: red;
-    display: inline-block;
-    height: 20px;
-}
-.decision{
-    font-size: 70px;
-    color: green;
 }
