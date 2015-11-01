@@ -22,7 +22,7 @@ requirejs.config
 
   shim:
     app:
-      deps: [ "leap", "three", "leap_plugins", "leap_rigged", "d3js", "jquery", "jsonhuman", "fuzzyset", "linear", "underscore", "gesture", "angular" ]
+      deps: ["angular", "leap", "three", "leap_plugins", "leap_rigged", "d3js", "jquery", "jsonhuman", "fuzzyset", "linear", "underscore", "gesture" ]
 
     gesture:
       deps: [ "gestures_sets", "linear", "fuzzyset", "metrics" ]

@@ -1,1 +1,145 @@
-var app,dictionary,visualizeHand;app=angular.module("app",[]),dictionary=["ТЕСТ","ПРИВЕТ"],app.controller("IndexCtrl",function(e){return e.score={},e.score.total=214,e.alphabet=GesturesSets.ru,e.word=dictionary[Math.floor(Math.random()*dictionary.length)].split(""),e.recognized="В"}),angular.bootstrap(document,["app"]),Leap.loop(),visualizeHand=function(e){var n,r;return e.use("playback",{recording:"pinch-bones-3-57fps.json.lz",timeBetweenLoops:1e3,pauseOnHand:!0}).on("riggedHand.meshAdded",function(e,n){return e.material.opacity=.7}),r=e.plugins.playback.player.overlay,r.style.left=0,r.style.top="auto",r.style.padding=0,r.style.bottom="13px",r.style.width="180px",e.use("riggedHand",{scale:1.3}),n=e.plugins.riggedHand.camera,n.position.set(0,10,-30),n.lookAt(new THREE.Vector3(5,5,0))},visualizeHand(Leap.loopController),function(e){return e(document).ready(function(){var n,r,t,a,o,i,u,s,d,c,l,p;return c=function(){var n;return n=e(".visualizer-container").width(),e("canvas").width(n),e("canvas").height(.8*n)},s=function(e){var n;if(n=void 0,d.push(e),20===d.length){for(n in d)if(d[n]!==e){e="?";break}return d.shift(),e}},l=function(n,r){return e.ajax({url:n,data:{data:r,gesture:o},success:function(){return u++%20===0?console.log(u+' Ok "'+o+'"'):void 0}})},t=function(e){return l("/node/store",e)},p=function(e){var n,r;n=void 0,r=void 0,n=[o];for(r in e)n.push(e[r]);return l("/node/statistic",n)},e("#visualizer").append(e("canvas")),c(),e(window).resize(function(){return c()}),i={Gesture:{}},o="_",u=1,console.log(o),d=[],e(document).on("keyup",function(e){return 18===e.keyCode?t(Gesture.getParamsArray()):void 0}).on("keyup",function(e){return 32===e.keyCode?p(Gesture.getParamsArray()):void 0}),a=15,r=_.debounce(function(e){return p(e)},a),n=e(".gesture_params"),Leap.loop(function(e){var t,a;if(e.hands[0]){a=e.hands[0],Gesture.getGestureParams(a),Gesture.getMetrics(Gesture.getParamsArray()),t=Gesture.makeDecision();for(u in t)i.Gesture[u]=t[u].name;for(u in t)if(t[u].name===o){r(i.Gesture);break}return n.html(JsonHuman.format(i))}})})}(jQuery);
+
+/*
+ * Created by Aitem on 01.11.2015.
+ */
+var app, dictionary, visualizeHand;
+
+dictionary = ["ТЕСТ", "ПРИВЕТ"];
+
+app = angular.module('app', []);
+
+app.controller("IndexCtrl", function($scope) {
+  $scope.score = {};
+  $scope.score.total = 214;
+  $scope.alphabet = GesturesSets.ru;
+  $scope.word = dictionary[Math.floor(Math.random() * dictionary.length)].split('');
+  return $scope.recognized = "A";
+});
+
+angular.bootstrap(document, ['app']);
+
+Leap.loop();
+
+visualizeHand = function(controller) {
+  var camera, overlay;
+  controller.use("playback", {
+    recording: "pinch-bones-3-57fps.json.lz",
+    timeBetweenLoops: 1000,
+    pauseOnHand: true
+  }).on("riggedHand.meshAdded", function(handMesh, leapHand) {
+    return handMesh.material.opacity = 0.7;
+  });
+  overlay = controller.plugins.playback.player.overlay;
+  overlay.style.left = 0;
+  overlay.style.top = "auto";
+  overlay.style.padding = 0;
+  overlay.style.bottom = "13px";
+  overlay.style.width = "180px";
+  controller.use("riggedHand", {
+    scale: 1.3
+  });
+  camera = controller.plugins.riggedHand.camera;
+  camera.position.set(0, 10, -30);
+  return camera.lookAt(new THREE.Vector3(5, 5, 0));
+};
+
+visualizeHand(Leap.loopController);
+
+(function($) {
+  return $(document).ready(function() {
+    var $gestureParams, _deb_senddata, capture, cooloff, gesture, gestureParams, i, meanGesture, queue, rezizeCanvas, sendData, stat;
+    rezizeCanvas = function() {
+      var canvas_width;
+      canvas_width = $(".visualizer-container").width();
+      $("canvas").width(canvas_width);
+      return $("canvas").height(canvas_width * 0.8);
+    };
+    meanGesture = function(gesture) {
+      var i;
+      i = void 0;
+      queue.push(gesture);
+      if (queue.length === 20) {
+        for (i in queue) {
+          if (queue[i] !== gesture) {
+            gesture = "?";
+            break;
+          }
+        }
+        queue.shift();
+        return gesture;
+      }
+    };
+    sendData = function(url, data) {
+      return $.ajax({
+        url: url,
+        data: {
+          data: data,
+          gesture: gesture
+        },
+        success: function() {
+          if (i++ % 20 === 0) {
+            return console.log(i + " Ok \"" + gesture + "\"");
+          }
+        }
+      });
+    };
+    capture = function(data) {
+      return sendData("/node/store", data);
+    };
+    stat = function(input) {
+      var data, i;
+      data = void 0;
+      i = void 0;
+      data = [gesture];
+      for (i in input) {
+        data.push(input[i]);
+      }
+      return sendData("/node/statistic", data);
+    };
+    $("#visualizer").append($("canvas"));
+    rezizeCanvas();
+    $(window).resize(function() {
+      return rezizeCanvas();
+    });
+    gestureParams = {
+      Gesture: {}
+    };
+    gesture = "_";
+    i = 1;
+    console.log(gesture);
+    queue = [];
+    $(document).on("keyup", function(e) {
+      if (e.keyCode === 18) {
+        return capture(Gesture.getParamsArray());
+      }
+    }).on("keyup", function(e) {
+      if (e.keyCode === 32) {
+        return stat(Gesture.getParamsArray());
+      }
+    });
+    cooloff = 15;
+    _deb_senddata = _.debounce((function(data) {
+      return stat(data);
+    }), cooloff);
+    $gestureParams = $(".gesture_params");
+    return Leap.loop(function(frame) {
+      var decision, hand;
+      if (frame.hands[0]) {
+        hand = frame.hands[0];
+        Gesture.getGestureParams(hand);
+        Gesture.getMetrics(Gesture.getParamsArray());
+        decision = Gesture.makeDecision();
+        for (i in decision) {
+          gestureParams.Gesture[i] = decision[i].name;
+        }
+        for (i in decision) {
+          if (decision[i].name === gesture) {
+            _deb_senddata(gestureParams.Gesture);
+            break;
+          }
+        }
+        return $gestureParams.html(JsonHuman.format(gestureParams));
+      }
+    });
+  });
+})(jQuery);
