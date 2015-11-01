@@ -8,23 +8,19 @@ html
     #left.inline
       .task
         .word
-          .char(ng-repeat="char in word track by $index") {{char}}
+          .char(ng-repeat="char in word track by $index" ng-class="char.status") {{char.name}}
       .progress
         .done
       #visualizer
 
     #right.inline
       .score
+        .dictionary
         .total
           .title SCORE:
-          | {{ score.total }}
-      .dictionary
+          | {{ score }}
+
 
       .alphabet
-        .char(ng-repeat="char in alphabet" ng-class="{current: char.name == recognized}")
+        .char(ng-repeat="char in alphabet" ng-class="{current: char.name == recognized}") {{char.name}}
           img(src="img/dic/ru/{{char.file}}.png" width="100%")
-      .params
-        .gesture_params
-
-
-

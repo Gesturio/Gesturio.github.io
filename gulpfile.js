@@ -75,10 +75,10 @@ gulp.task('release', function(){
     .pipe(gulp.dest(release));
   gulp.src('./src/js/*.coffee')
     .pipe(coffee({bare: true}).on('error', gutil.log))
-    //.pipe(uglify())
+    .pipe(uglify())
     .pipe(gulp.dest(release+'js/'));
   gulp.src('./src/js/**/*.js')
-    //.pipe(uglify())
+    .pipe(uglify())
     .pipe(gulp.dest(release+'js/'))
   gulp.src('./src/img/*')
     .pipe(rev())

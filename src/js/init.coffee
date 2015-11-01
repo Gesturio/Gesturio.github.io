@@ -14,7 +14,6 @@ requirejs.config
     linear: "linear"
     d3js: "d3.min"
     underscore: "underscore-min"
-    jsonhuman: "json.human"
     transform: "leap.transform"
     leap_plugins: "leap-plugins-0.1.6.1"
     gestures_sets: "gestures_sets"
@@ -22,7 +21,7 @@ requirejs.config
 
   shim:
     app:
-      deps: ["angular", "leap", "three", "leap_plugins", "leap_rigged", "d3js", "jquery", "jsonhuman", "fuzzyset", "linear", "underscore", "gesture" ]
+      deps: ["angular", "leap", "three", "leap_plugins", "leap_rigged", "d3js", "jquery", "fuzzyset", "linear", "underscore", "gesture" ]
 
     gesture:
       deps: [ "gestures_sets", "linear", "fuzzyset", "metrics" ]
