@@ -138,7 +138,7 @@ app.config(function($routeProvider) {
   rp = $routeProvider;
   rp.when('/', {
     name: 'index',
-    templateUrl: 'views/_index.html',
+    templateUrl: 'views/front.html',
     controller: 'IndexCtrl'
   });
   return rp.when('/main', {

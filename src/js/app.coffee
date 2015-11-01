@@ -112,7 +112,7 @@ app.config ($routeProvider) ->
   rp = $routeProvider
   rp.when '/',
     name: 'index'
-    templateUrl: 'views/_index.html'
+    templateUrl: 'views/front.html'
     controller: 'IndexCtrl'
   rp.when '/main',
     name: 'index'
