@@ -1,9 +1,28 @@
 ###
 # Created by Aitem on 01.11.2015.
 ###
+
+app = angular.module('app', [])
+
+dictionary = [
+  "ТЕСТ", "ПРИВЕТ"
+]
+
+app.controller "IndexCtrl", ($scope)->
+  $scope.score = {}
+  $scope.score.total = 214
+
+  $scope.alphabet = GesturesSets.ru
+
+  $scope.word = dictionary[Math.floor(Math.random()*dictionary.length)].split('')
+
+  $scope.recognized = "В"
+
+
+angular.bootstrap(document, ['app'])
+# Init
 Leap.loop()
 
-# Init
 visualizeHand = (controller) ->
   controller.use("playback",
     recording: "pinch-bones-3-57fps.json.lz"
@@ -101,3 +120,5 @@ visualizeHand Leap.loopController
         $gestureParams.html JsonHuman.format(gestureParams)
 
 ) jQuery
+
+

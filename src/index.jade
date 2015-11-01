@@ -3,30 +3,28 @@ html
   head
     meta(name='viewport', content='width=device-width, initial-scale=1')
     link(rel='stylesheet', href='style.css')
-    script(src='js/test.js', type='text/javascript')
-  body
+    script(data-main='js/init', src='js/libs/require.js')
+  body(ng-controller="IndexCtrl")
     #left.inline
-      #task
+      .task
         .word
-          .char.correct А
-          .char.wrong.in_progress В
-          .char Г
-      #progress
+          .char(ng-repeat="char in word track by $index") {{char}}
+      .progress
         .done
       #visualizer
 
     #right.inline
-      #score
-        .total 510
-      #dictionary
-        .dictionary
-          .char А
-          .char Б
-          .char В
-          .char Г
-          .char Д
-          .char Е
-      #params
+      .score
+        .total
+          .title SCORE:
+          | {{ score.total }}
+      .dictionary
+
+      .alphabet
+        .char(ng-repeat="char in alphabet" ng-class="{current: char.name == recognized}")
+          img(src="img/dic/ru/{{char.name}}.png" width="100%")
+      .params
         .gesture_params
 
-    script(data-main='js/init', src='js/libs/require.js')
+
+

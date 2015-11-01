@@ -14,7 +14,8 @@ var uglify = require('gulp-uglify');
 var coffee = require('gulp-coffee');
 var webserver = require('gulp-webserver');
 var gutil = require('gulp-util');
-
+var zip = require('gulp-zip');
+var concat = require('gulp-concat');
 
 gulp.task('clear', function() {
   gulp.src(dist)
@@ -37,6 +38,8 @@ gulp.task('img', function(){
   gulp.src('./src/img/*')
     .pipe(rev())
     .pipe(gulp.dest('./dist/img/'))
+  gulp.src('./src/img/dic/**/*')
+    .pipe(gulp.dest('./dist/img/dic/'))
 });
 
 gulp.task('js', function(){
@@ -80,4 +83,6 @@ gulp.task('release', function(){
   gulp.src('./src/img/*')
     .pipe(rev())
     .pipe(gulp.dest(release+'img/'))
+  gulp.src(release)
+    .pipe(zip('release.zip'))
 });

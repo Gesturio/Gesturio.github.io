@@ -5,7 +5,7 @@
   min-width: 800px;
 }
 
-#task{
+.task{
   .word {
     text-align: center;
     letter-spacing: 8px;
@@ -21,12 +21,41 @@
       &.wrong {
         color: red;
       }
-
     }
   }
 }
 
-#progress {
+.score {
+  height: 70px;
+  .title {
+    font-size: 40px;
+    display: inline;
+    margin-right: 10px;
+  }
+  .total {
+    color: green;
+    font-size: 50px;
+    text-align: center;
+    font-weight: bold;
+  }
+}
+
+.alphabet {
+  .char{
+    display: inline-block;
+    width: 25%;
+    text-align: center;
+    height: 120px;
+    vertical-align: middle;
+    box-sizing: border-box;
+    border: 1px solid transparent;
+    &:hover, &.current {
+      border: 1px solid green;
+    }
+  }
+}
+
+.progress {
   display: block;
   background: #ddd;
   height: 10px;
