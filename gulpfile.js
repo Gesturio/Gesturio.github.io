@@ -4,35 +4,62 @@ var assetRev = require('gulp-asset-rev-jade');
 var rev = require('gulp-rev');
 var ecstatic = require('ecstatic');
 var serverport = 8000;
-var  http = require('http');
+var http = require('http');
 var clean = require('gulp-clean');
-var dist = "./dist/**/*";
-
+var dist = "./dist/";
+var less = require('gulp-less');
+var path = require('path');
+var minifyCSS = require('gulp-minify-css');
+var uglify = require('gulp-uglify');
+var coffee = require('gulp-coffee');
+var webserver = require('gulp-webserver');
 
 gulp.task('clear', function() {
   gulp.src(dist)
-    .pipe(clean())
+    .pipe(clean({force: true}))
 });
 
-gulp.task('build', function() {
+gulp.task('less', function () {
+  gulp.src('./src/style/style.less')
+    .pipe(less())
+    .pipe(minifyCSS())
+    .pipe(gulp.dest('./dist/'));
+});
+
+gulp.task('img', function(){
   gulp.src('./src/img/*')
     .pipe(rev())
     .pipe(gulp.dest('./dist/img/'))
+});
 
-  gulp.src('./src/*.jade')
-    .pipe(jade())
-    .pipe(assetRev({connecter: '-'}))
-    .pipe(gulp.dest('./dist/'))
+gulp.task('js', function(){
+  gulp.src('./src/js/**/*.coffee')
+    .pipe(coffee({bare: true}))
+    //.pipe(uglify())
+    .pipe(gulp.dest('./dist/js/'));
+  gulp.src('./src/js/**/*.js')
+    //.pipe(uglify())
+    .pipe(gulp.dest('./dist/js/'))
+});
 
-  gulp.src('./src/**/*')
+gulp.task('index', function(){
+  gulp.src('./src/index.html')
     .pipe(gulp.dest('./dist/'))
 });
+
+gulp.task('build', ['index', 'less', 'js', 'img']);
 
 gulp.task('watch', function() {
     gulp.watch('./src/**/*', ['build']);
 });
 
 gulp.task('server', ['build', 'watch'], function() {
-    http.createServer(ecstatic({ root: __dirname + '/dist', index: "index.html" })).listen(serverport);
+  gulp.src('./dist/')
+    .pipe(webserver({
+      directoryListing: false,
+      open: true,
+      port: serverport,
+      fallback: 'index.html'
+    }));
 });
 
