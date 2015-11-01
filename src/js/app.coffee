@@ -107,7 +107,6 @@ dictionary = [
   "АААААААААААААА", "ТЕСТ", "ПРИВЕТ"
 ]
 
-
 app = angular.module('app', ['ngRoute'])
 app.config ($routeProvider) ->
   rp = $routeProvider
