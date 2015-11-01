@@ -1,6 +1,35 @@
 @import "reset";
 @import "layout";
 
+ul.instruction{
+  padding: 12%;
+  padding-top: 22px;
+  padding-bottom: 50px;
+
+  font-size: 20px;
+  color: #444;
+  li {
+    margin-top: 10px ;
+  }
+}
+.hi{
+  text-align: center;
+  .hand {
+    width: 280px;
+    height: 700px;
+    margin: 0 auto;
+    -webkit-animation:spin 6s linear infinite;
+    -moz-animation:spin 6s linear infinite;
+    animation:spin 6s linear infinite;
+    transform: rotate(-20deg);
+    background: url("../img/hi.png") no-repeat top;
+  }
+  @-moz-keyframes spin { 50% { -moz-transform: rotate(20deg); } }
+  @-webkit-keyframes spin { 50% { -webkit-transform: rotate(20deg); } }
+  @keyframes spin { 50% { -webkit-transform: rotate(20deg); transform:rotate(20deg); } }
+}
+
+
 #grs{
   min-width: 800px;
 }
@@ -45,7 +74,6 @@
     display: inline-block;
     width: 25%;
     text-align: center;
-    height: 120px;
     vertical-align: middle;
     box-sizing: border-box;
     border: 1px solid transparent;

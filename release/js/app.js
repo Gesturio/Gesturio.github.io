@@ -1,1 +1,189 @@
-var app,dictionary,init;init=function(e){var r;return Leap.loop(),r=function(e){var r,n;return e.use("playback",{recording:"pinch-bones-3-57fps.json.lz",timeBetweenLoops:1e3,pauseOnHand:!0}).on("riggedHand.meshAdded",function(e,r){return e.material.opacity=.7}),n=e.plugins.playback.player.overlay,n.style.left=0,n.style.top="auto",n.style.padding=0,n.style.bottom="13px",n.style.width="180px",e.use("riggedHand",{scale:1.3}),r=e.plugins.riggedHand.camera,r.position.set(0,10,-30),r.lookAt(new THREE.Vector3(5,5,0))},r(Leap.loopController),function(r){var n,t,o,a,i,u,s,c,d,l,p,f;return l=function(){var e;return e=r(".visualizer-container").width(),r("canvas").width(e),r("canvas").height(.8*e)},c=function(e){var r;if(r=void 0,d.push(e),20===d.length){for(r in d)if(d[r]!==e){e="?";break}return d.shift(),e}},p=function(e,n){return r.ajax({url:e,data:{data:n,gesture:i},success:function(){return s++%20===0?console.log(s+' Ok "'+i+'"'):void 0}})},o=function(e){return p("/node/store",e)},f=function(e){var r,n;r=void 0,n=void 0,r=[i];for(n in e)r.push(e[n]);return p("/node/statistic",r)},r("#visualizer").append(r("canvas")),l(),r(window).resize(function(){return l()}),u={Gesture:{}},i="_",s=1,console.log(i),d=[],r(document).on("keyup",function(e){return 18===e.keyCode?o(Gesture.getParamsArray()):void 0}).on("keyup",function(e){return 32===e.keyCode?f(Gesture.getParamsArray()):void 0}),a=15,t=_.debounce(function(e){return f(e)},a),n=r(".gesture_params"),Leap.loop(function(r){var n,o;if(r.hands[0]){o=r.hands[0],Gesture.getGestureParams(o),Gesture.getMetrics(Gesture.getParamsArray()),n=Gesture.makeDecision();for(s in n)u.Gesture[s]=n[s].name;for(s in n)if(n[s].name===i){t(u.Gesture);break}return e.recognized=u.Gesture.fuzzy,e.$apply()}})}(jQuery)},dictionary=["АААААААААААААА","ТЕСТ","ПРИВЕТ"],app=angular.module("app",[]),app.controller("IndexCtrl",function(e){var r;return init(e),e.score=0,e.score.total=214,e.alphabet=GesturesSets.ru,r=0,e.new_word=function(){return e.word=dictionary[Math.floor(Math.random()*dictionary.length)].split("").map(function(e){return{name:e,status:""}}),e.word[0].status="current",r=0},e.new_word(),e.$watch("recognized",function(n){return e.word=e.word||[],n!==e.word[r].name?e.word[r].status="wrong":(e.word[r].status="correct",r++,e.score++,console.log(n),r===e.word.length-1?e.new_word():void 0)})}),angular.bootstrap(document,["app"]);
+
+/*
+ * Created by Aitem on 01.11.2015.
+ */
+var app, dictionary, init;
+
+init = function($scope) {
+  var visualizeHand;
+  Leap.loop();
+  visualizeHand = function(controller) {
+    var camera, overlay;
+    controller.use("playback", {
+      recording: "pinch-bones-3-57fps.json.lz",
+      timeBetweenLoops: 1000,
+      pauseOnHand: true
+    }).on("riggedHand.meshAdded", function(handMesh, leapHand) {
+      return handMesh.material.opacity = 0.7;
+    });
+    overlay = controller.plugins.playback.player.overlay;
+    overlay.style.left = 0;
+    overlay.style.top = "auto";
+    overlay.style.padding = 0;
+    overlay.style.bottom = "13px";
+    overlay.style.width = "180px";
+    controller.use("riggedHand", {
+      scale: 1.3
+    });
+    camera = controller.plugins.riggedHand.camera;
+    camera.position.set(0, 10, -30);
+    return camera.lookAt(new THREE.Vector3(5, 5, 0));
+  };
+  visualizeHand(Leap.loopController);
+  return (function($) {
+    var $gestureParams, _deb_senddata, capture, cooloff, gesture, gestureParams, i, meanGesture, queue, rezizeCanvas, sendData, stat;
+    rezizeCanvas = function() {
+      var canvas_width;
+      canvas_width = $(".visualizer-container").width();
+      $("canvas").width(canvas_width);
+      return $("canvas").height(canvas_width * 0.8);
+    };
+    meanGesture = function(gesture) {
+      var i;
+      i = void 0;
+      queue.push(gesture);
+      if (queue.length === 20) {
+        for (i in queue) {
+          if (queue[i] !== gesture) {
+            gesture = "?";
+            break;
+          }
+        }
+        queue.shift();
+        return gesture;
+      }
+    };
+    sendData = function(url, data) {
+      return $.ajax({
+        url: url,
+        data: {
+          data: data,
+          gesture: gesture
+        },
+        success: function() {
+          if (i++ % 20 === 0) {
+            return console.log(i + " Ok \"" + gesture + "\"");
+          }
+        }
+      });
+    };
+    capture = function(data) {
+      return sendData("/node/store", data);
+    };
+    stat = function(input) {
+      var data, i;
+      data = void 0;
+      i = void 0;
+      data = [gesture];
+      for (i in input) {
+        data.push(input[i]);
+      }
+      return sendData("/node/statistic", data);
+    };
+    $("#visualizer").append($("canvas"));
+    rezizeCanvas();
+    $(window).resize(function() {
+      return rezizeCanvas();
+    });
+    gestureParams = {
+      Gesture: {}
+    };
+    gesture = "_";
+    i = 1;
+    console.log(gesture);
+    queue = [];
+    $(document).on("keyup", function(e) {
+      if (e.keyCode === 18) {
+        return capture(Gesture.getParamsArray());
+      }
+    }).on("keyup", function(e) {
+      if (e.keyCode === 32) {
+        return stat(Gesture.getParamsArray());
+      }
+    });
+    cooloff = 15;
+    _deb_senddata = _.debounce((function(data) {
+      return stat(data);
+    }), cooloff);
+    $gestureParams = $(".gesture_params");
+    return Leap.loop(function(frame) {
+      var decision, hand;
+      if (frame.hands[0]) {
+        hand = frame.hands[0];
+        Gesture.getGestureParams(hand);
+        Gesture.getMetrics(Gesture.getParamsArray());
+        decision = Gesture.makeDecision();
+        for (i in decision) {
+          gestureParams.Gesture[i] = decision[i].name;
+        }
+        for (i in decision) {
+          if (decision[i].name === gesture) {
+            _deb_senddata(gestureParams.Gesture);
+            break;
+          }
+        }
+        $scope.recognized = gestureParams.Gesture.fuzzy;
+        return $scope.$apply();
+      }
+    });
+  })(jQuery);
+};
+
+dictionary = ["АААААААААААААА", "ТЕСТ", "ПРИВЕТ"];
+
+app = angular.module('app', ['ngRoute']);
+
+app.config(function($routeProvider) {
+  var rp;
+  rp = $routeProvider;
+  rp.when('/', {
+    name: 'index',
+    templateUrl: 'views/_index.html',
+    controller: 'IndexCtrl'
+  });
+  return rp.when('/main', {
+    name: 'index',
+    templateUrl: 'views/main.html',
+    controller: 'MainCtrl'
+  });
+});
+
+app.controller("IndexCtrl", function($scope) {
+  return console.log('dfdfd');
+});
+
+app.controller("MainCtrl", function($scope) {
+  var i;
+  init($scope);
+  $scope.score = 0;
+  $scope.score.total = 214;
+  $scope.alphabet = GesturesSets.ru;
+  i = 0;
+  $scope.new_word = function() {
+    $scope.word = dictionary[Math.floor(Math.random() * dictionary.length)].split('').map(function(x) {
+      return {
+        name: x,
+        status: ''
+      };
+    });
+    $scope.word[0].status = 'current';
+    return i = 0;
+  };
+  $scope.new_word();
+  return $scope.$watch('recognized', function(x) {
+    $scope.word = $scope.word || [];
+    if (x === $scope.word[i].name) {
+      $scope.word[i].status = 'correct';
+      i++;
+      $scope.score++;
+      console.log(x);
+      if (i === $scope.word.length - 1) {
+        return $scope.new_word();
+      }
+    } else {
+      return $scope.word[i].status = 'wrong';
+    }
+  });
+});
+
+angular.bootstrap(document, ['app']);

@@ -107,8 +107,23 @@ dictionary = [
   "АААААААААААААА", "ТЕСТ", "ПРИВЕТ"
 ]
 
-app = angular.module('app', [])
+
+app = angular.module('app', ['ngRoute'])
+app.config ($routeProvider) ->
+  rp = $routeProvider
+  rp.when '/',
+    name: 'index'
+    templateUrl: 'views/_index.html'
+    controller: 'IndexCtrl'
+  rp.when '/main',
+    name: 'index'
+    templateUrl: 'views/main.html'
+    controller: 'MainCtrl'
+
 app.controller "IndexCtrl", ($scope)->
+  console.log('dfdfd')
+
+app.controller "MainCtrl", ($scope)->
   init($scope)
   $scope.score = 0
   $scope.score.total = 214

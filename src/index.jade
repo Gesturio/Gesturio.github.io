@@ -2,25 +2,9 @@ doctype html
 html
   head
     meta(name='viewport', content='width=device-width, initial-scale=1')
-    link(rel='stylesheet', href='style.css')
+    link(rel='stylesheet', href='css/style.css')
+
     script(data-main='js/init', src='js/libs/require.js')
-  body(ng-controller="IndexCtrl")
-    #left.inline
-      .task
-        .word
-          .char(ng-repeat="char in word track by $index" ng-class="char.status") {{char.name}}
-      .progress
-        .done
-      #visualizer
-
-    #right.inline
-      .score
-        .dictionary
-        .total
-          .title SCORE:
-          | {{ score }}
-
-
-      .alphabet
-        .char(ng-repeat="char in alphabet" ng-class="{current: char.name == recognized}") {{char.name}}
-          img(src="img/dic/ru/{{char.file}}.png" width="100%")
+    //script(src="modules.js")
+  body
+    #view(ng-view='')

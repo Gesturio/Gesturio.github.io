@@ -15,7 +15,13 @@ var coffee = require('gulp-coffee');
 var webserver = require('gulp-webserver');
 var gutil = require('gulp-util');
 var zip = require('gulp-zip');
+var amdOptimize = require('gulp-amd-optimizer');
 var concat = require('gulp-concat');
+
+
+//amdOptimize.src( {
+//  configFile : gulp.src("./src/js/init.coffee").pipe(coffee())
+//});
 
 gulp.task('clear', function() {
   gulp.src(dist)
@@ -23,7 +29,11 @@ gulp.task('clear', function() {
 });
 
 gulp.task('jade', function () {
-  gulp.src('./src/**/*.jade')
+  gulp.src('./src/views/*.jade')
+    .pipe(jade())
+    .pipe(assetRev({connecter: '-'}))
+    .pipe(gulp.dest('./dist/views'));
+  gulp.src('./src/index.jade')
     .pipe(jade())
     .pipe(gulp.dest('./dist/'));
 });
@@ -31,7 +41,8 @@ gulp.task('jade', function () {
 gulp.task('less', function () {
   gulp.src('./src/style/style.less')
     .pipe(less())
-    .pipe(gulp.dest('./dist/'));
+    .pipe(assetRev({connecter: '-'}))
+    .pipe(gulp.dest('./dist/css'));
 });
 
 gulp.task('img', function(){
@@ -48,12 +59,18 @@ gulp.task('js', function(){
     .pipe(gulp.dest('./dist/js/'));
   gulp.src('./src/js/**/*.js')
     .pipe(gulp.dest('./dist/js/'))
+  //
+  //gulp.src(release+'js/**/*.js')
+  //  .pipe(amdOptimize('app'))
+  //  .pipe(concat('modules.js'))
+  //  .pipe(gulp.dest('./dist/'));
 });
 
 gulp.task('build', ['jade', 'less', 'js', 'img']);
 
 gulp.task('watch', function() {
-    gulp.watch('./src/**/*', ['build']);
+  gulp.watch('./src/**/*', ['build']);
+  gulp.watch('./src/**/*.jade', ['jade']);
 });
 
 gulp.task('server', ['build', 'watch'], function() {
@@ -66,25 +83,28 @@ gulp.task('server', ['build', 'watch'], function() {
 
 gulp.task('release', function(){
   var release = "./release/";
-  gulp.src('./src/**/*.jade')
+  gulp.src('./src/views/*.jade')
+    .pipe(jade())
+    .pipe(assetRev({connecter: '-'}))
+    .pipe(gulp.dest(release+'views'));
+  gulp.src('./src/index.jade')
     .pipe(jade())
     .pipe(gulp.dest(release));
   gulp.src('./src/style/style.less')
     .pipe(less())
+    .pipe(assetRev({connecter: '-'}))
     .pipe(minifyCSS())
-    .pipe(gulp.dest(release));
+    .pipe(gulp.dest(release+'css'));
   gulp.src('./src/js/*.coffee')
     .pipe(coffee({bare: true}).on('error', gutil.log))
-    .pipe(uglify())
+    //.pipe(uglify())
     .pipe(gulp.dest(release+'js/'));
   gulp.src('./src/js/**/*.js')
-    .pipe(uglify())
-    .pipe(gulp.dest(release+'js/'))
+    //.pipe(uglify())
+    .pipe(gulp.dest(release+'js/'));
   gulp.src('./src/img/*')
     .pipe(rev())
-    .pipe(gulp.dest(release+'img/'))
-  gulp.src(release)
-    .pipe(zip('release.zip'))
+    .pipe(gulp.dest(release+'img/'));
   gulp.src('./src/img/dic/**/*')
     .pipe(gulp.dest(release+'img/dic/'))
 });

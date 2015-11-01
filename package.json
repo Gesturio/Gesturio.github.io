@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/Gesturio/Gesturio.github.io#readme",
   "devDependencies": {
+    "amd-optimize": "^0.6.1",
     "coffee": "^2.0.0",
     "coffee-script": "^1.10.0",
     "ecstatic": "^1.1.3",

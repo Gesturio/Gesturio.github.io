@@ -1,1 +1,52 @@
-!function(t){t.fs=function(t,r,n,a){return FuzzySet.fs(t,r,n,a)},t.euclidean=function(t,r){var n=0;for(var a in t)n+=Math.pow(t[a]-r[a],2);return Math.sqrt(n)},t.taxicab=function(t,r){var n=0;for(var a in t)n+=Math.abs(t[a]-r[a]);return n},t.correlation=function(t,r){var n=0,a=0,o=0,e=0,i=0;for(var f in t)e+=t[f],i+=r[f];e/=t.length,i/=r.length;for(var f in t)n+=(t[f]-e)*(r[f]-i),a+=Math.pow(t[f]-e,2),o+=Math.pow(r[f]-i,2);return n/Math.sqrt(a*o)},t.cosine=function(t,r){var n=0,a=0,o=0;for(var e in t)n+=t[e]*r[e],a+=Math.pow(t[e],2),o+=Math.pow(r[e],2);return n/(Math.sqrt(a)*Math.sqrt(o))}}("undefined"==typeof exports?this.Metrics={}:exports);
+/**
+ * Created by Aitem on 26.04.2015.
+ */
+(function(e) {
+
+    e.fs = function(x, m, c, d){
+        return FuzzySet.fs(x, m, c, d);
+    };
+
+    e.euclidean = function (x, m) {
+        var t = 0;
+        for(var i in x){
+            t += Math.pow(x[i]-m[i], 2);
+        }
+        return Math.sqrt(t);
+    }
+
+    e.taxicab = function (x, m){
+        var t = 0;
+        for(var i in x){
+           t += Math.abs(x[i] - m[i]);
+        }
+        return t;
+    }
+
+    e.correlation = function(x, m){
+        var a = 0, b = 0, c = 0,
+            _x = 0, _m =0;
+        for(var i in x){
+            _x += x[i];
+            _m += m[i];
+        }
+        _x /= x.length; _m /= m.length;
+        for(var i in x){
+            a += (x[i]-_x)*(m[i]-_m);
+            b += Math.pow(x[i] - _x, 2);
+            c += Math.pow(m[i] - _m, 2);
+        }
+        return a/Math.sqrt(b*c);
+    }
+
+    e.cosine = function(x, m){
+        var  a = 0, b = 0, c = 0;
+        for(var i in x){
+            a += x[i] * m[i];
+            b += Math.pow(x[i], 2);
+            c += Math.pow(m[i], 2);
+        }
+        return a / (Math.sqrt(b) * Math.sqrt(c));
+    }
+
+})(typeof exports === 'undefined'? this['Metrics']={}: exports);

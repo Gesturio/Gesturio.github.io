@@ -1,2 +1,2 @@
 # Gesturion
-Specil for #3DJam
+Special for #3DJam
