@@ -13,6 +13,8 @@ var minifyCSS = require('gulp-minify-css');
 var uglify = require('gulp-uglify');
 var coffee = require('gulp-coffee');
 var webserver = require('gulp-webserver');
+var gutil = require('gulp-util');
+
 
 gulp.task('clear', function() {
   gulp.src(dist)
@@ -33,8 +35,8 @@ gulp.task('img', function(){
 });
 
 gulp.task('js', function(){
-  gulp.src('./src/js/**/*.coffee')
-    .pipe(coffee({bare: true}))
+  gulp.src('./src/js/*.coffee')
+    .pipe(coffee({bare: true}).on('error', gutil.log))
     //.pipe(uglify())
     .pipe(gulp.dest('./dist/js/'));
   gulp.src('./src/js/**/*.js')
@@ -57,9 +59,8 @@ gulp.task('server', ['build', 'watch'], function() {
   gulp.src('./dist/')
     .pipe(webserver({
       directoryListing: false,
-      open: true,
       port: serverport,
-      fallback: 'index.html'
+      fallback: './index.html'
     }));
 });
 
