@@ -6,5 +6,5 @@ html
 
     script(data-main='js/init', src='js/libs/require.js')
     //script(src="modules.js")
-  body
+  body.loading(ng-class="{loaded : done}" class="{{ctrlname}}")
     #view(ng-view='')

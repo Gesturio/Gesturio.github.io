@@ -119,10 +119,21 @@ app.config ($routeProvider) ->
     templateUrl: 'views/main.html'
     controller: 'MainCtrl'
 
-app.controller "IndexCtrl", ($scope)->
-  console.log('dfdfd')
+app.controller "IndexCtrl", ($rootScope, $scope, $location)->
+  init($scope)
+  $scope.ctrlname = 'index'
+  $scope.recognized = '_'
+  $scope.$watch 'recognized', (x)->
+    console.log x
+    if x != '_'
+      setTimeout ()->
+        $location.path('main')
+      , 1000
+  $rootScope.done = true
 
-app.controller "MainCtrl", ($scope)->
+
+app.controller "MainCtrl", ($rootScope, $scope)->
+  $rootScope.done = true
   init($scope)
   $scope.score = 0
   $scope.score.total = 214

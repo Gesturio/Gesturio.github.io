@@ -148,12 +148,24 @@ app.config(function($routeProvider) {
   });
 });
 
-app.controller("IndexCtrl", function($scope) {
-  return console.log('dfdfd');
+app.controller("IndexCtrl", function($rootScope, $scope, $location) {
+  init($scope);
+  $rootScope.done = true;
+  $scope.ctrlname = 'index';
+  $scope.recognized = '_';
+  return $scope.$watch('recognized', function(x) {
+    console.log(x);
+    if (x !== '_') {
+      return setTimeout(function() {
+        return $location.path('main');
+      }, 1000);
+    }
+  });
 });
 
-app.controller("MainCtrl", function($scope) {
+app.controller("MainCtrl", function($rootScope, $scope) {
   var i;
+  $rootScope.done = true;
   init($scope);
   $scope.score = 0;
   $scope.score.total = 214;
