@@ -31,16 +31,16 @@ init = function($scope) {
   };
   visualizeHand(Leap.loopController);
   return (function($) {
-    var $gestureParams, _deb_senddata, capture, cooloff, gesture, gestureParams, i, meanGesture, queue, rezizeCanvas, sendData, stat;
+    var _deb_senddata, capture, cooloff, gesture, gestureParams, i, meanGesture, queue, rezizeCanvas, sendData, stat;
     rezizeCanvas = function() {
       var canvas_width;
       canvas_width = $(".visualizer-container").width();
       $("canvas").width(canvas_width);
       return $("canvas").height(canvas_width * 0.8);
     };
+    queue = [];
     meanGesture = function(gesture) {
       var i;
-      i = void 0;
       queue.push(gesture);
       if (queue.length === 20) {
         for (i in queue) {
@@ -105,7 +105,6 @@ init = function($scope) {
     _deb_senddata = _.debounce((function(data) {
       return stat(data);
     }), cooloff);
-    $gestureParams = $(".gesture_params");
     return Leap.loop(function(frame) {
       var decision, hand;
       if (frame.hands[0]) {
@@ -115,12 +114,6 @@ init = function($scope) {
         decision = Gesture.makeDecision();
         for (i in decision) {
           gestureParams.Gesture[i] = decision[i].name;
-        }
-        for (i in decision) {
-          if (decision[i].name === gesture) {
-            _deb_senddata(gestureParams.Gesture);
-            break;
-          }
         }
         $scope.recognized = gestureParams.Gesture.fuzzy;
         return $scope.$apply();
@@ -150,17 +143,17 @@ app.config(function($routeProvider) {
 
 app.controller("IndexCtrl", function($rootScope, $scope, $location) {
   init($scope);
-  $rootScope.done = true;
   $scope.ctrlname = 'index';
   $scope.recognized = '_';
-  return $scope.$watch('recognized', function(x) {
+  $scope.$watch('recognized', function(x) {
     console.log(x);
     if (x !== '_') {
       return setTimeout(function() {
         return $location.path('main');
-      }, 1000);
+      }, 700);
     }
   });
+  return $rootScope.done = true;
 });
 
 app.controller("MainCtrl", function($rootScope, $scope) {
@@ -188,7 +181,6 @@ app.controller("MainCtrl", function($rootScope, $scope) {
       $scope.word[i].status = 'correct';
       i++;
       $scope.score++;
-      console.log(x);
       if (i === $scope.word.length - 1) {
         return $scope.new_word();
       }

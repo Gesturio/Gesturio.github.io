@@ -32,8 +32,8 @@ init = ($scope)->
         $("canvas").width canvas_width
         $("canvas").height canvas_width * 0.8
 
+      queue = []
       meanGesture = (gesture) ->
-        i = undefined
         queue.push gesture
         if queue.length is 20
           for i of queue
@@ -83,7 +83,6 @@ init = ($scope)->
       _deb_senddata = _.debounce(((data) ->
         stat data
       ), cooloff)
-      $gestureParams = $(".gesture_params")
 
       Leap.loop (frame) ->
         if frame.hands[0]
@@ -93,10 +92,7 @@ init = ($scope)->
           decision = Gesture.makeDecision()
           for i of decision
             gestureParams.Gesture[i] = decision[i].name
-          for i of decision
-            if decision[i].name is gesture
-              _deb_senddata gestureParams.Gesture
-              break
+          # TODO: add voting
           $scope.recognized = gestureParams.Gesture.fuzzy
           $scope.$apply()
 
@@ -128,7 +124,7 @@ app.controller "IndexCtrl", ($rootScope, $scope, $location)->
     if x != '_'
       setTimeout ()->
         $location.path('main')
-      , 1000
+      , 700
   $rootScope.done = true
 
 
@@ -155,7 +151,6 @@ app.controller "MainCtrl", ($rootScope, $scope)->
       $scope.word[i].status = 'correct'
       i++
       $scope.score++
-      console.log x
       if (i == $scope.word.length-1)
         $scope.new_word()
     else
