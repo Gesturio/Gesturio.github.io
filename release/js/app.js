@@ -31,7 +31,7 @@ init = function($scope) {
   };
   visualizeHand(Leap.loopController);
   return (function($) {
-    var _deb_senddata, capture, cooloff, gesture, gestureParams, i, meanGesture, queue, rezizeCanvas, sendData, stat;
+    var _deb_senddata, _throttle_apply, capture, cooloff, gesture, gestureParams, i, l, m, meanGesture, queue, rezizeCanvas, sendData, stat;
     rezizeCanvas = function() {
       var canvas_width;
       canvas_width = $(".visualizer-container").width();
@@ -105,6 +105,21 @@ init = function($scope) {
     _deb_senddata = _.debounce((function(data) {
       return stat(data);
     }), cooloff);
+    m = 0;
+    l = '_';
+    _throttle_apply = _.throttle(function() {
+      if (l === gestureParams.Gesture.fuzzy) {
+        m++;
+        if (m === 5) {
+          $scope.recognized = gestureParams.Gesture.fuzzy;
+          $scope.$apply();
+          return console.log('apply ', gestureParams.Gesture.fuzzy);
+        }
+      } else {
+        l = gestureParams.Gesture.fuzzy;
+        return m = 0;
+      }
+    }, 50);
     return Leap.loop(function(frame) {
       var decision, hand;
       if (frame.hands[0]) {
@@ -115,14 +130,13 @@ init = function($scope) {
         for (i in decision) {
           gestureParams.Gesture[i] = decision[i].name;
         }
-        $scope.recognized = gestureParams.Gesture.fuzzy;
-        return $scope.$apply();
+        return _throttle_apply();
       }
     });
   })(jQuery);
 };
 
-dictionary = ["АААААААААААААА", "ТЕСТ", "ПРИВЕТ"];
+dictionary = ["МАМА", "ТЕСТ", "ПРИВЕТ"];
 
 app = angular.module('app', ['ngRoute']);
 
@@ -146,19 +160,19 @@ app.controller("IndexCtrl", function($rootScope, $scope, $location) {
   $scope.ctrlname = 'index';
   $scope.recognized = '_';
   $scope.$watch('recognized', function(x) {
-    console.log(x);
+    $location.path('main');
     if (x !== '_') {
       return setTimeout(function() {
-        return $location.path('main');
-      }, 700);
+        return $location.path("main");
+      }, 1000);
     }
   });
-  return $rootScope.done = true;
+  $rootScope.done = true;
+  return $rootScope.loaded = 'loaded';
 });
 
 app.controller("MainCtrl", function($rootScope, $scope) {
   var i;
-  $rootScope.done = true;
   init($scope);
   $scope.score = 0;
   $scope.score.total = 214;
@@ -175,19 +189,26 @@ app.controller("MainCtrl", function($rootScope, $scope) {
     return i = 0;
   };
   $scope.new_word();
-  return $scope.$watch('recognized', function(x) {
+  $scope.$watch('recognized', function(x) {
     $scope.word = $scope.word || [];
     if (x === $scope.word[i].name) {
       $scope.word[i].status = 'correct';
       i++;
       $scope.score++;
-      if (i === $scope.word.length - 1) {
-        return $scope.new_word();
+      if (i === $scope.word.length) {
+        return setTimeout(function() {
+          $scope.new_word();
+          return $scope.$apply();
+        }, 1000);
       }
     } else {
       return $scope.word[i].status = 'wrong';
     }
   });
+  return setTimeout(function() {
+    $rootScope.loaded = 'loaded';
+    return $rootScope.$apply();
+  }, 500);
 });
 
 angular.bootstrap(document, ['app']);

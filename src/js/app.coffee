@@ -84,6 +84,21 @@ init = ($scope)->
         stat data
       ), cooloff)
 
+      m = 0
+      l = '_'
+
+      _throttle_apply = _.throttle ()->
+        if (l == gestureParams.Gesture.fuzzy)
+          m++
+          if m == 5
+            $scope.recognized = gestureParams.Gesture.fuzzy
+            $scope.$apply()
+            console.log 'apply ', gestureParams.Gesture.fuzzy
+        else
+          l = gestureParams.Gesture.fuzzy
+          m = 0
+      , 50
+
       Leap.loop (frame) ->
         if frame.hands[0]
           hand = frame.hands[0]
@@ -92,15 +107,14 @@ init = ($scope)->
           decision = Gesture.makeDecision()
           for i of decision
             gestureParams.Gesture[i] = decision[i].name
-          # TODO: add voting
-          $scope.recognized = gestureParams.Gesture.fuzzy
-          $scope.$apply()
+
+          _throttle_apply()
 
   ) jQuery
 
 
 dictionary = [
-  "АААААААААААААА", "ТЕСТ", "ПРИВЕТ"
+  "МАМА", "ТЕСТ", "ПРИВЕТ"
 ]
 
 app = angular.module('app', ['ngRoute'])
@@ -120,16 +134,17 @@ app.controller "IndexCtrl", ($rootScope, $scope, $location)->
   $scope.ctrlname = 'index'
   $scope.recognized = '_'
   $scope.$watch 'recognized', (x)->
-    console.log x
+    $location.path('main')
     if x != '_'
       setTimeout ()->
-        $location.path('main')
-      , 700
+        $location.path "main"
+      , 1000
+
   $rootScope.done = true
+  $rootScope.loaded = 'loaded'
 
 
 app.controller "MainCtrl", ($rootScope, $scope)->
-  $rootScope.done = true
   init($scope)
   $scope.score = 0
   $scope.score.total = 214
@@ -151,10 +166,18 @@ app.controller "MainCtrl", ($rootScope, $scope)->
       $scope.word[i].status = 'correct'
       i++
       $scope.score++
-      if (i == $scope.word.length-1)
-        $scope.new_word()
+      if (i == $scope.word.length)
+        setTimeout ()->
+          $scope.new_word()
+          $scope.$apply()
+        , 1000
     else
       $scope.word[i].status = 'wrong'
+
+  setTimeout ()->
+    $rootScope.loaded = 'loaded'
+    $rootScope.$apply()
+  , 500
 
 
 angular.bootstrap(document, ['app'])

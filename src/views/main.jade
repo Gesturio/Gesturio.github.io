@@ -1,20 +1,34 @@
 #left.inline
   .task
-    .word
+    .word.inline
       .char(ng-repeat="char in word track by $index" ng-class="char.status") {{char.name}}
+    .score.inline
+      .dictionary
+      .total
+        .title SCORE:
+        | {{ score }}
   .progress
     .done
   #visualizer
 
 #right.inline
-  .score
-    .dictionary
-    .total
-      .title SCORE:
-      | {{ score }}
-
-
+  .language
+    //ul
+      li.english English
+      li.russian Russian
   .alphabet
     .char(ng-repeat="char in alphabet" ng-class="{current: char.name == recognized}")
       img(src="img/dic/ru/{{char.file}}.png" width="100%" title="{{char.name}}")
       .status(ng-class="char.status")
+  .description
+    p.desc_info Gescture recognition status:
+    ul.desc
+      li
+        .status.good
+        | Good recognition ability
+      li
+        .status.poor
+        | Poor recognition ability
+      li
+        .status.unsupported
+        | Unsupported or untrackable
