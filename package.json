@@ -41,6 +41,7 @@
     "gulp-zip": "^3.0.2",
     "http-server": "latest",
     "jade": "^1.11.0",
+    "run-sequence": "^1.1.4",
     "st": "^1.0.0",
     "tiny-lr": "^0.2.1"
   },

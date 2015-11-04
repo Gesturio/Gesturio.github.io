@@ -134,11 +134,12 @@ app.controller "IndexCtrl", ($rootScope, $scope, $location)->
   $scope.ctrlname = 'index'
   $scope.recognized = '_'
   $scope.$watch 'recognized', (x)->
-    $location.path('main')
     if x != '_'
       setTimeout ()->
         $location.path "main"
-      , 1000
+        console.log 'dfdf'
+      , 100
+
 
   $rootScope.done = true
   $rootScope.loaded = 'loaded'
