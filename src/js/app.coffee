@@ -135,10 +135,7 @@ app.controller "IndexCtrl", ($rootScope, $scope, $location)->
   $scope.recognized = '_'
   $scope.$watch 'recognized', (x)->
     if x != '_'
-      setTimeout ()->
-        $location.path "main"
-        console.log 'dfdf'
-      , 100
+      $location.path "main"
 
 
   $rootScope.done = true
