@@ -5,9 +5,7 @@ Special for #3DJam
 
 ````
 $ npm install
-$ npm install -g gulp
-$ gulp build
-$ gulp server --color
+$ npm run start
 ```
 
 Local WEB server will be run at http://localhost:8000

@@ -28,7 +28,6 @@ gulp.task('release', function(cb) {
       'r_less',
       'r_coffee', 'r_js', 'r_js_min',
       'r_img', 'r_dic'],
-    'server',
     'r_zip', cb
   );
 });
