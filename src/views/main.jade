@@ -21,7 +21,7 @@
         li(ng-repeat="lang in languages" ng-click="set_lang(lang)") {{lang.label}}
   .alphabet
     .char(ng-repeat="char in alphabet" ng-class="{current: char.name == recognized}")
-      img(src="img/dic/ru/{{char.file}}.png" width="100%" title="{{char.name}}")
+      img(src="img/dic/{{cur_lang.dictionary}}/{{char.file}}.png" width="100%" title="{{char.name}}")
       .status(ng-class="char.status")
   .description
     p.desc_info Gescture recognition status:

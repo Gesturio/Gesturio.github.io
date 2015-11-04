@@ -181,18 +181,16 @@ app.controller("MainCtrl", function($rootScope, $scope) {
     }, {
       label: 'Russian',
       dictionary: 'ru'
-    }, {
-      label: 'Compilation',
-      dictionary: 'comp'
     }
   ];
   $scope.score = 0;
-  $scope.score.total = 214;
-  $scope.alphabet = GesturesSets.ru;
   $scope.cur_lang = $scope.languages[0];
+  $scope.alphabet = GesturesSets.en;
+  Gesture.GesturesSet = $scope.alphabet;
   $scope.set_lang = function(lang) {
     $scope.cur_lang = lang;
-    return $scope.alphabet = GesturesSets[$scope.cur_lang.dictionary];
+    $scope.alphabet = GesturesSets[$scope.cur_lang.dictionary];
+    return Gesture.GesturesSet = $scope.alphabet;
   };
   i = 0;
   $scope.new_word = function() {
@@ -222,10 +220,7 @@ app.controller("MainCtrl", function($rootScope, $scope) {
       return $scope.word[i].status = 'wrong';
     }
   });
-  return setTimeout(function() {
-    $rootScope.loaded = 'loaded';
-    return $rootScope.$apply();
-  }, 500);
+  return $rootScope.loaded = 'loaded';
 });
 
 angular.bootstrap(document, ['app']);

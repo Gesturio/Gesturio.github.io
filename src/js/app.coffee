@@ -153,19 +153,17 @@ app.controller "MainCtrl", ($rootScope, $scope)->
     }, {
       label: 'Russian'
       dictionary: 'ru'
-    }, {
-      label: 'Compilation'
-      dictionary: 'comp'
     }
   ]
   $scope.score = 0
-  $scope.score.total = 214
-  $scope.alphabet = GesturesSets.ru
   $scope.cur_lang = $scope.languages[0]
+  $scope.alphabet = GesturesSets.en
+  Gesture.GesturesSet = $scope.alphabet
 
   $scope.set_lang = (lang)->
     $scope.cur_lang = lang
     $scope.alphabet = GesturesSets[$scope.cur_lang.dictionary]
+    Gesture.GesturesSet = $scope.alphabet
 
   i = 0
   $scope.new_word = ()->
@@ -191,11 +189,6 @@ app.controller "MainCtrl", ($rootScope, $scope)->
     else
       $scope.word[i].status = 'wrong'
 
-  setTimeout ()->
-    $rootScope.loaded = 'loaded'
-    $rootScope.$apply()
-  , 500
-
+  $rootScope.loaded = 'loaded'
 
 angular.bootstrap(document, ['app'])
-

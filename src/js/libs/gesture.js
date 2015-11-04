@@ -21,7 +21,7 @@
 
 (function(e){
     e._m  = '_m_p';
-    e.cur_lang = 'ru';
+    e.cur_lang = e.cur_lang || 'ru';
     e.GesturesSet = GesturesSets[e.cur_lang];
     e.probability = [];
     e.recognizedGesture = '';
