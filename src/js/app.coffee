@@ -146,9 +146,26 @@ app.controller "IndexCtrl", ($rootScope, $scope, $location)->
 
 app.controller "MainCtrl", ($rootScope, $scope)->
   init($scope)
+  $scope.languages = [
+    {
+      label: 'English'
+      dictionary: 'en'
+    }, {
+      label: 'Russian'
+      dictionary: 'ru'
+    }, {
+      label: 'Compilation'
+      dictionary: 'comp'
+    }
+  ]
   $scope.score = 0
   $scope.score.total = 214
   $scope.alphabet = GesturesSets.ru
+  $scope.cur_lang = $scope.languages[0]
+
+  $scope.set_lang = (lang)->
+    $scope.cur_lang = lang
+    $scope.alphabet = GesturesSets[$scope.cur_lang.dictionary]
 
   i = 0
   $scope.new_word = ()->

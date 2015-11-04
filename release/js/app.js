@@ -174,9 +174,26 @@ app.controller("IndexCtrl", function($rootScope, $scope, $location) {
 app.controller("MainCtrl", function($rootScope, $scope) {
   var i;
   init($scope);
+  $scope.languages = [
+    {
+      label: 'English',
+      dictionary: 'en'
+    }, {
+      label: 'Russian',
+      dictionary: 'ru'
+    }, {
+      label: 'Compilation',
+      dictionary: 'comp'
+    }
+  ];
   $scope.score = 0;
   $scope.score.total = 214;
   $scope.alphabet = GesturesSets.ru;
+  $scope.cur_lang = $scope.languages[0];
+  $scope.set_lang = function(lang) {
+    $scope.cur_lang = lang;
+    return $scope.alphabet = GesturesSets[$scope.cur_lang.dictionary];
+  };
   i = 0;
   $scope.new_word = function() {
     $scope.word = dictionary[Math.floor(Math.random() * dictionary.length)].split('').map(function(x) {

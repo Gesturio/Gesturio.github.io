@@ -13,9 +13,12 @@
 
 #right.inline
   .language
-    //ul
-      li.english English
-      li.russian Russian
+    span.language_select_label.inline Language:
+    span.selector
+      i.fa.fa-caret-down.language_select_down
+      ul.language_selector.inline(ng-class="{opened:open}" ng-click="open=!open")
+        li {{cur_lang.label}}
+        li(ng-repeat="lang in languages" ng-click="set_lang(lang)") {{lang.label}}
   .alphabet
     .char(ng-repeat="char in alphabet" ng-class="{current: char.name == recognized}")
       img(src="img/dic/ru/{{char.file}}.png" width="100%" title="{{char.name}}")

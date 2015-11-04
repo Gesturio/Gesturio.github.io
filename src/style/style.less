@@ -78,7 +78,7 @@ ul.instruction{
 }
 
 .alphabet {
-  margin-top: 20px;
+  margin-top: 50px;
   .char{
     display: inline-block;
     padding-top: 5px;
@@ -136,7 +136,48 @@ ul.instruction{
     height: 3px;
   }
 }
+.language{
+  position: absolute;
+}
+.language_select_label {
+  font-size: 20px;
+  margin-top: 4px;
+  margin-right: 10px;
+}
 
+.language .selector{
+  display: inline-block;
+  position: relative;
+  .language_select_down{
+    position: absolute;
+    right: 8px;
+    top: 7px;
+  }
+}
+
+.language_selector{
+  padding: 3px 10px;
+  font-size: 20px;
+  list-style: none;
+  background: white;
+  border-radius: 5px;
+  border: 1px solid #CCCCCC;
+  overflow: hidden;
+  height: 26px;
+  padding-right: 22px;
+  padding-left: 5px;
+  &.opened{
+    height: auto;
+  }
+  li{
+    margin-left: 5px;
+    border-bottom: 1px solid transparent ;
+    &:hover {
+      cursor: pointer;
+      border-bottom: 1px solid #aaa ;
+    }
+  }
+}
 
 #visualizer {
   position: relative;
@@ -147,8 +188,6 @@ ul.instruction{
     width: 100% !important;
     height: 100% !important;
   }
-}
-#connect-leap {
 }
 .gesture {
     margin-bottom: 10px;
