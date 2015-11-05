@@ -50,8 +50,7 @@
 
     // Функция принадлежности класса p
     e._m_p = function (x, m, d) {
-        d = (d < 0.7)? 0.7 : d;
-        return Math.exp(-(Math.pow(x - m, 2)/(2*d)));
+        return Math.exp(-(Math.pow(x - m, 2)/(2*Math.sqrt(d))));
     };
 
     e.fs = function (x, m, c, d) {

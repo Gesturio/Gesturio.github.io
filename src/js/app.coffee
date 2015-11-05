@@ -90,14 +90,14 @@ init = ($scope)->
       _throttle_apply = _.throttle ()->
         if (l == gestureParams.Gesture.fuzzy)
           m++
-          if m == 5
+          if m == 10
             $scope.recognized = gestureParams.Gesture.fuzzy
             $scope.$apply()
             console.log 'apply ', gestureParams.Gesture.fuzzy
         else
           l = gestureParams.Gesture.fuzzy
           m = 0
-      , 50
+      , 20
 
       Leap.loop (frame) ->
         if frame.hands[0]
@@ -113,9 +113,13 @@ init = ($scope)->
   ) jQuery
 
 
-dictionary = [
-  "МАМА", "ТЕСТ", "ПРИВЕТ"
-]
+dictionary =
+  ru: [
+    "МАМА", "ТЕСТ", "ПРИВЕТ"
+  ]
+  en: [
+    "ABC", "FKL", "WAC"
+  ]
 
 app = angular.module('app', ['ngRoute'])
 app.config ($routeProvider) ->
@@ -158,14 +162,17 @@ app.controller "MainCtrl", ($rootScope, $scope)->
   $scope.alphabet = GesturesSets.en
   Gesture.GesturesSet = $scope.alphabet
 
+  $scope.progress = 100
+
   $scope.set_lang = (lang)->
     $scope.cur_lang = lang
     $scope.alphabet = GesturesSets[$scope.cur_lang.dictionary]
     Gesture.GesturesSet = $scope.alphabet
+    $scope.new_word()
 
   i = 0
   $scope.new_word = ()->
-    $scope.word = dictionary[Math.floor(Math.random()*dictionary.length)].split('').map (x)->
+    $scope.word = dictionary[$scope.cur_lang.dictionary][Math.floor(Math.random()*dictionary[$scope.cur_lang.dictionary].length)].split('').map (x)->
       name: x
       status: ''
     $scope.word[0].status = 'current'
