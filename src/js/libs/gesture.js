@@ -23,9 +23,6 @@
     e._m  = '_m_p';
     e.cur_lang = e.cur_lang || 'ru';
     e.GesturesSet = GesturesSets[e.cur_lang];
-    e.probability = [];
-    e.recognizedGesture = '';
-    e.recognizedProbability = 0;
 
     // Объект параметров руки
     e.gestureParams = {};
@@ -36,71 +33,24 @@
      * Расчет вероятностей
      */
     e.getMetrics = function(){
-        e.probability = {
-            fuzzy       : [],
-            euclidean   : [],
-            taxicab     : [],
-            correlation : [],
-            cosine      : []
-        };
-        for(var i in e.GesturesSet){
-            e.probability.fuzzy.push(
-                Metrics.fs(e.gestureParamsArray, e._m, e.GesturesSet[i].params.M, e.GesturesSet[i].params.D)
-            );
-            e.probability.euclidean.push(
-                Metrics.euclidean(e.gestureParamsArray, e.GesturesSet[i].params.M)
-            );
-            e.probability.taxicab.push(
-                Metrics.taxicab(e.gestureParamsArray, e.GesturesSet[i].params.M)
-            );
-            e.probability.correlation.push(
-                Metrics.correlation(e.gestureParamsArray, e.GesturesSet[i].params.M)
-            );
-            e.probability.cosine.push(
-                Metrics.cosine(e.gestureParamsArray, e.GesturesSet[i].params.M)
-            );
+      e.metrics = []
+      e.GesturesSet.forEach(function(g){
+        if (g.params.M.length) {
+          e.metrics.push(Metrics.fs(e.gestureParamsArray, e._m, g.params.M, g.params.D));
+        } else {
+          e.metrics.push(0)
         }
-        return e.probability;
+      });
     };
 
     /**
      * Приниятие решения
      */
     e.makeDecision = function(){
-
-        var decision = {
-            fuzzy       : e.max(e.probability.fuzzy),
-            euclidean   : e.min(e.probability.euclidean),
-            taxicab     : e.min(e.probability.taxicab),
-            correlation : e.max(e.probability.correlation),
-            cosine      : e.max(e.probability.cosine)
-        };
-
-        return {
-            fuzzy       : e.GesturesSet[decision.fuzzy],
-            euclidean   : e.GesturesSet[decision.euclidean],
-            taxicab     : e.GesturesSet[decision.taxicab],
-            correlation : e.GesturesSet[decision.correlation],
-            cosine      : e.GesturesSet[decision.correlation]
-        };
+      return e.GesturesSet[e.max(e.metrics)]
     };
     e.max = function(arr){
-        var max = 0;
-        for(var i in arr){
-            if(arr[i] > arr[max]){
-                max = i;
-            }
-        }
-        return max;
-    };
-    e.min = function(arr){
-        var mim = 0;
-        for(var i in arr){
-            if(arr[i] < arr[mim]){
-                mim = i;
-            }
-        }
-        return mim;
+      return arr.indexOf(Math.max.apply(Math, arr));
     };
 
     /**
@@ -119,7 +69,6 @@
                 e.gestureParamsArray.push(obj[i]);
             }
         }
-        return;
     };
 
     /**

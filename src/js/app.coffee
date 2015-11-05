@@ -24,78 +24,31 @@ init = ($scope)->
     camera = controller.plugins.riggedHand.camera
     camera.position.set 0, 10, -30
     camera.lookAt new THREE.Vector3(5, 5, 0)
-
   visualizeHand Leap.loopController
+
   ( ($) ->
       rezizeCanvas = ->
         canvas_width = $(".visualizer-container").width()
         $("canvas").width canvas_width
         $("canvas").height canvas_width * 0.8
-
-      queue = []
-      meanGesture = (gesture) ->
-        queue.push gesture
-        if queue.length is 20
-          for i of queue
-            if queue[i] isnt gesture
-              gesture = "?"
-              break
-          queue.shift()
-          gesture
-
-      sendData = (url, data) ->
-        $.ajax
-          url: url
-          data:
-            data: data
-            gesture: gesture
-
-          success: ->
-            console.log i + " Ok \"" + gesture + "\""  if i++ % 20 is 0
-
-      capture = (data) ->
-        sendData "/node/store", data
-
-      stat = (input) ->
-        data = undefined
-        i = undefined
-        data = [ gesture ]
-        for i of input
-          data.push input[i]
-        sendData "/node/statistic", data
-
       $("#visualizer").append $("canvas")
       rezizeCanvas()
-      $(window).resize ->
-        rezizeCanvas()
-
-      gestureParams = Gesture: {}
-      gesture = "_"
-      i = 1
-      console.log gesture
-      queue = []
-      $(document).on("keyup", (e) ->
-        capture Gesture.getParamsArray()  if e.keyCode is 18
-      ).on "keyup", (e) ->
-        stat Gesture.getParamsArray()  if e.keyCode is 32
-
-      cooloff = 15
-      _deb_senddata = _.debounce(((data) ->
-        stat data
-      ), cooloff)
+      $(window).resize -> rezizeCanvas()
 
       m = 0
       l = '_'
+      decision = '_'
 
       _throttle_apply = _.throttle ()->
-        if (l == gestureParams.Gesture.fuzzy)
+        name = decision.name
+        if (l == name)
           m++
           if m == 10
-            $scope.recognized = gestureParams.Gesture.fuzzy
+            $scope.recognized = name
             $scope.$apply()
-            console.log 'apply ', gestureParams.Gesture.fuzzy
+            console.log 'apply ', name
         else
-          l = gestureParams.Gesture.fuzzy
+          l = name
           m = 0
       , 20
 
@@ -105,11 +58,7 @@ init = ($scope)->
           Gesture.getGestureParams hand
           Gesture.getMetrics Gesture.getParamsArray()
           decision = Gesture.makeDecision()
-          for i of decision
-            gestureParams.Gesture[i] = decision[i].name
-
           _throttle_apply()
-
   ) jQuery
 
 

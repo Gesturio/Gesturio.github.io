@@ -1,5 +1,5 @@
 /**
- * Created by Aitem on 21.03.2015.
+ * Created by Aitem
  */
 (function(e) {
     // Нечеткое множество
@@ -50,6 +50,7 @@
 
     // Функция принадлежности класса p
     e._m_p = function (x, m, d) {
+        // TODO: precalculate sqtr in etalons
         return Math.exp(-(Math.pow(x - m, 2)/(2*Math.sqrt(d))));
     };
 

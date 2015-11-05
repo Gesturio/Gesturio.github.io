@@ -1,5 +1,5 @@
 /**
- * Created by Aitem on 26.04.2015.
+ * Created by Aitem
  */
 (function(e) {
 
