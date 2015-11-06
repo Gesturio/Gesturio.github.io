@@ -2,8 +2,31 @@
 # Created by Aitem on 01.11.2015.
 ###
 # Init
+m = 0
+l = '_'
+decision = '_'
+
 init = ($scope)->
-  Leap.loop()
+  Leap.loop (frame) ->
+    _throttle_apply = _.throttle ()->
+      name = decision.name
+      if (l == name)
+        m++
+        if m == 10
+          $scope.recognized = name
+          $scope.$apply()
+          console.log 'apply ', name
+      else
+        l = name
+        m = 0
+    , 20
+
+    if frame.hands[0]
+      hand = frame.hands[0]
+      Gesture.getGestureParams hand
+      Gesture.getMetrics Gesture.getParamsArray()
+      decision = Gesture.makeDecision()
+      _throttle_apply()
 
   visualizeHand = (controller) ->
     controller.use("playback",
@@ -26,41 +49,8 @@ init = ($scope)->
     camera.lookAt new THREE.Vector3(5, 5, 0)
   visualizeHand Leap.loopController
 
-  ( ($) ->
-      rezizeCanvas = ->
-        canvas_width = $(".visualizer-container").width()
-        $("canvas").width canvas_width
-        $("canvas").height canvas_width * 0.8
-      $("#visualizer").append $("canvas")
-      rezizeCanvas()
-      $(window).resize -> rezizeCanvas()
-
-      m = 0
-      l = '_'
-      decision = '_'
-
-      _throttle_apply = _.throttle ()->
-        name = decision.name
-        if (l == name)
-          m++
-          if m == 10
-            $scope.recognized = name
-            $scope.$apply()
-            console.log 'apply ', name
-        else
-          l = name
-          m = 0
-      , 20
-
-      Leap.loop (frame) ->
-        if frame.hands[0]
-          hand = frame.hands[0]
-          Gesture.getGestureParams hand
-          Gesture.getMetrics Gesture.getParamsArray()
-          decision = Gesture.makeDecision()
-          _throttle_apply()
-  ) jQuery
-
+  # Pure JS =)
+  document.getElementById("visualizer").appendChild(document.getElementsByTagName("canvas")[0])
 
 dictionary =
   ru: [
@@ -74,13 +64,35 @@ app = angular.module('app', ['ngRoute'])
 app.config ($routeProvider) ->
   rp = $routeProvider
   rp.when '/',
-    name: 'index'
     templateUrl: 'views/front.html'
     controller: 'IndexCtrl'
   rp.when '/main',
-    name: 'index'
     templateUrl: 'views/main.html'
     controller: 'MainCtrl'
+  rp.when '/sandbox',
+    templateUrl: 'views/sandbox.html'
+    controller: 'SandboxCtrl'
+
+app.directive 'keypressEvents', ($document, $rootScope) ->
+  restrict: 'A'
+  link: ->
+    console.log 'linked'
+    $document.bind 'keypress', (e) ->
+      $rootScope.$broadcast 'keypress', e, String.fromCharCode(e.which)
+
+app.controller "SandboxCtrl", ($rootScope, $scope, $location, $document)->
+  init($scope)
+
+  $rootScope.$on 'keypress', (e, a, key)->
+    console.log 'dfdfdfdf'
+
+  $scope.keyup = ($event)->
+    console.log 'dfdfdfdfdfdf'
+
+  $scope.add = ()->
+    console.log 'added'
+
+  $rootScope.loaded = 'loaded'
 
 app.controller "IndexCtrl", ($rootScope, $scope, $location)->
   init($scope)

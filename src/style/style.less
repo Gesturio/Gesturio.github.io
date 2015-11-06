@@ -1,5 +1,6 @@
 @import "reset";
 @import "layout";
+@import "form";
 
 .loading{
   background: url('../img/spinner.gif') no-repeat center;
@@ -81,7 +82,7 @@ ul.instruction{
   margin-top: 50px;
   .char{
     display: inline-block;
-    padding-top: 5px;
+    padding: 5px 2px 1px 2px;
     width: 20%;
     text-align: center;
     vertical-align: middle;
@@ -89,6 +90,12 @@ ul.instruction{
     border: 2px solid transparent;
     &:hover, &.current {
       border: 2px solid green;
+    }
+    &.new_char{
+      border: 1px dashed gray;
+      :hover{
+        cursor: pointer;
+      }
     }
   }
 }

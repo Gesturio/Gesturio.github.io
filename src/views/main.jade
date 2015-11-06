@@ -20,6 +20,8 @@
         li {{cur_lang.label}}
         li(ng-repeat="lang in languages" ng-click="set_lang(lang)") {{lang.label}}
   .alphabet
+    a.char.new_char(href="#/sandbox")
+      img(src="img/dic/plus.png" width="100%" title="Add new gesture")
     .char(ng-repeat="char in alphabet" ng-class="{current: char.name == recognized}")
       img(src="img/dic/{{cur_lang.dictionary}}/{{char.file}}.png" width="100%" title="{{char.name}}")
       .status(ng-class="char.status")
