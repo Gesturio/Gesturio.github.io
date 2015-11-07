@@ -4,6 +4,150 @@
  */
 var app, dictionary, init, params;
 
+dictionary = {
+  ru: ["МАМА", "ТЕСТ", "ПРИВЕТ"],
+  en: ["BACKLIGHT", "BLACKOUT", "DAYLIGHT", "COBALT", "COW", "GOTHIC", "HOBBY", "HICKUP", "POLICY", "PUBLIC", "QUOTA", "AUDIO", "AUDIT", "HOLIDAY", "DOUGHTY", "DIABLO", "DIALOG", "QUAHOG", "QUICKY", "QUEUE", "BLACK", "BLOCK", "POLYACID", "TABLOID", "BACKLOG", "CAPITOL", "JAIL", "GLIB", "YOGA", "AGO", "GABY"]
+};
+
+app = angular.module('app', ['ngRoute']);
+
+app.config(function($routeProvider) {
+  var rp;
+  rp = $routeProvider;
+  rp.when('/', {
+    templateUrl: 'views/front.html',
+    controller: 'IndexCtrl'
+  });
+  rp.when('/main', {
+    templateUrl: 'views/main.html',
+    controller: 'MainCtrl'
+  });
+  return rp.when('/sandbox', {
+    templateUrl: 'views/sandbox.html',
+    controller: 'SandboxCtrl'
+  });
+}).directive('keypressEvents', function($document, $rootScope) {
+  return {
+    restrict: 'A',
+    link: function() {
+      return $document.bind('keyup', function(e) {
+        return $rootScope.$broadcast('keyup', e, String.fromCharCode(e.which));
+      });
+    }
+  };
+}).controller("IndexCtrl", function($rootScope, $scope, $location) {
+  init($scope);
+  $scope.recognized = '_';
+  $scope.$watch('recognized', function(x) {
+    if (x !== '_') {
+      return $location.path("main");
+    }
+  });
+  return $rootScope.loaded = 'loaded';
+}).controller("SandboxCtrl", function($rootScope, $scope, $location) {
+  var _round;
+  init($scope);
+  $scope.$on('keyup', function(e, a, key) {
+    if (key === ' ') {
+      return $scope.set.push(params);
+    }
+  });
+  $scope.set = [];
+  $scope.g = {
+    params: {
+      M: [],
+      D: []
+    }
+  };
+  _round = function(value, decimals) {
+    return Number(Math.round(value + 'e' + decimals) + 'e-' + decimals);
+  };
+  $scope.add = function() {
+    console.log($scope.set.length);
+    $scope.g.params.M = $scope.set[0].map(function(x, i) {
+      var t;
+      t = $scope.set.reduce(function(acc, v) {
+        return acc + v[i];
+      }, 0);
+      t /= $scope.set.length;
+      return _round(t, 5);
+    });
+    $scope.g.params.D = $scope.set[0].map(function(x, i) {
+      var t;
+      t = $scope.set.reduce(function(acc, v) {
+        return Math.pow(v[i] - $scope.g.params.M[i], 2);
+      }, 0);
+      t /= $scope.set.length;
+      if (t >= 1) {
+        t / 100;
+      }
+      if (t < 0.001) {
+        while (t < 0.001) {
+          t *= 10;
+        }
+      }
+      return _round(t, 5);
+    });
+    GesturesSets.en.unshift($scope.g);
+    $scope.set = [];
+    console.log(JSON.stringify($scope.g.params));
+    return $location.path('/main');
+  };
+  return $rootScope.loaded = 'loaded';
+}).controller("MainCtrl", function($rootScope, $scope, $routeParams) {
+  init($scope);
+  $scope.languages = [
+    {
+      label: 'English',
+      dictionary: 'en'
+    }, {
+      label: 'Russian',
+      dictionary: 'ru'
+    }, {
+      label: 'Sandbox (dev mode)',
+      dictionary: '__sandbox'
+    }
+  ];
+  $scope.score = 0;
+  $scope.cur_lang = $scope.languages[0];
+  $scope.alphabet = GesturesSets.en;
+  Gesture.GesturesSet = $scope.alphabet;
+  $scope.set_lang = function(lang) {
+    $scope.cur_lang = lang;
+    $scope.alphabet = GesturesSets[$scope.cur_lang.dictionary];
+    Gesture.GesturesSet = $scope.alphabet;
+    return $scope.new_word();
+  };
+  $scope.new_word = function() {
+    $scope.i = 0;
+    $scope.word = dictionary[$scope.cur_lang.dictionary][Math.floor(Math.random() * dictionary[$scope.cur_lang.dictionary].length)].split('').map(function(x) {
+      return {
+        name: x,
+        status: ''
+      };
+    });
+    return $scope.word[0].status = 'current';
+  };
+  $scope.new_word();
+  $scope.$watch('recognized', function(x) {
+    $scope.word = $scope.word || [];
+    if (x === $scope.word[$scope.i].name) {
+      $scope.word[$scope.i].status = 'correct';
+      $scope.score++;
+      $scope.i++;
+      if ($scope.i >= $scope.word.length) {
+        return setTimeout(function() {
+          $scope.new_word();
+          return $scope.$apply();
+        }, 1000);
+      } else {
+        return $scope.word[$scope.i].status = 'current';
+      }
+    }
+  });
+  return $rootScope.loaded = 'loaded';
+});
+
 params = [];
 
 init = function($scope) {
@@ -67,159 +211,5 @@ init = function($scope) {
     }
   })(Leap.loopController);
 };
-
-dictionary = {
-  ru: ["МАМА", "ТЕСТ", "ПРИВЕТ"],
-  en: ["BACKLIGHT", "BLACKOUT", "DAYLIGHT", "COBALT", "COW", "GOTHIC", "HOBBY", "HICKUP", "POLICY", "PUBLIC", "QUOTA", "AUDIO", "AUDIT", "HOLIDAY", "DOUGHTY", "DIABLO", "DIALOG", "QUAHOG", "QUICKY", "QUEUE", "BLACK", "BLOCK", "POLYACID", "TABLOID", "BACKLOG", "CAPITOL", "JAIL", "GLIB", "YOGA", "AGO", "GABY"]
-};
-
-app = angular.module('app', ['ngRoute']);
-
-app.config(function($routeProvider) {
-  var rp;
-  rp = $routeProvider;
-  rp.when('/', {
-    templateUrl: 'views/front.html',
-    controller: 'IndexCtrl'
-  });
-  rp.when('/main', {
-    templateUrl: 'views/main.html',
-    controller: 'MainCtrl'
-  });
-  return rp.when('/sandbox', {
-    templateUrl: 'views/sandbox.html',
-    controller: 'SandboxCtrl'
-  });
-});
-
-app.directive('keypressEvents', function($document, $rootScope) {
-  return {
-    restrict: 'A',
-    link: function() {
-      return $document.bind('keyup', function(e) {
-        return $rootScope.$broadcast('keyup', e, String.fromCharCode(e.which));
-      });
-    }
-  };
-});
-
-app.controller("SandboxCtrl", function($rootScope, $scope, $location) {
-  var _round;
-  init($scope);
-  $scope.$on('keyup', function(e, a, key) {
-    if (key === ' ') {
-      $scope.set.push(params);
-      $scope.$apply();
-      return console.log($scope.set);
-    }
-  });
-  $scope.set = [];
-  $scope.g = {
-    params: {
-      M: [],
-      D: []
-    }
-  };
-  _round = function(value, decimals) {
-    return Number(Math.round(value + 'e' + decimals) + 'e-' + decimals);
-  };
-  $scope.add = function() {
-    console.log($scope.set.length);
-    $scope.g.params.M = $scope.set[0].map(function(x, i) {
-      var t;
-      t = $scope.set.reduce(function(acc, v) {
-        return acc + v[i];
-      }, 0);
-      t /= $scope.set.length;
-      return _round(t, 5);
-    });
-    $scope.g.params.D = $scope.set[0].map(function(x, i) {
-      var t;
-      t = $scope.set.reduce(function(acc, v) {
-        return Math.pow(v[i] - $scope.g.params.M[i], 2);
-      }, 0);
-      t /= $scope.set.length;
-      if (t >= 1) {
-        t / 100;
-      }
-      if (t < 0.001) {
-        while (t < 0.001) {
-          t *= 10;
-        }
-      }
-      return _round(t, 5);
-    });
-    GesturesSets.en.unshift($scope.g);
-    $scope.set = [];
-    console.log(JSON.stringify($scope.g.params));
-    return $location.path('/main');
-  };
-  return $rootScope.loaded = 'loaded';
-});
-
-app.controller("IndexCtrl", function($rootScope, $scope, $location) {
-  init($scope);
-  $scope.ctrlname = 'index';
-  $scope.recognized = '_';
-  $scope.$watch('recognized', function(x) {
-    if (x !== '_') {
-      return $location.path("main");
-    }
-  });
-  $rootScope.done = true;
-  return $rootScope.loaded = 'loaded';
-});
-
-app.controller("MainCtrl", function($rootScope, $scope) {
-  init($scope);
-  $scope.languages = [
-    {
-      label: 'English',
-      dictionary: 'en'
-    }, {
-      label: 'Russian',
-      dictionary: 'ru'
-    }
-  ];
-  $scope.score = 0;
-  $scope.cur_lang = $scope.languages[0];
-  $scope.alphabet = GesturesSets.en;
-  Gesture.GesturesSet = $scope.alphabet;
-  $scope.progress = 100;
-  $scope.set_lang = function(lang) {
-    $scope.cur_lang = lang;
-    $scope.alphabet = GesturesSets[$scope.cur_lang.dictionary];
-    Gesture.GesturesSet = $scope.alphabet;
-    return $scope.new_word();
-  };
-  $scope.new_word = function() {
-    $scope.i = 0;
-    $scope.word = dictionary[$scope.cur_lang.dictionary][Math.floor(Math.random() * dictionary[$scope.cur_lang.dictionary].length)].split('').map(function(x) {
-      return {
-        name: x,
-        status: ''
-      };
-    });
-    return $scope.word[0].status = 'current';
-  };
-  $scope.new_word();
-  $scope.$watch('recognized', function(x) {
-    $scope.word = $scope.word || [];
-    if (x === $scope.word[$scope.i].name) {
-      $scope.word[$scope.i].status = 'correct';
-      $scope.score++;
-      $scope.i++;
-      if ($scope.i >= $scope.word.length) {
-        return setTimeout(function() {
-          $scope.new_word();
-          return $scope.$apply();
-        }, 1000);
-      } else {
-        return $scope.word[$scope.i].status = 'current';
-      }
-    }
-  });
-  return $rootScope.loaded = 'loaded';
-});
 
 angular.bootstrap(document, ['app']);

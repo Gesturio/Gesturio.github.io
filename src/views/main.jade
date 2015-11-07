@@ -1,24 +1,26 @@
 #left.inline
-  .task
+  .task(title="Type word")
     .word.inline
       .char(ng-repeat="char in word track by $index" ng-class="[char.status]") {{char.name}}
-    .score.inline
-      .dictionary
-      .total
-        .title SCORE:
-        | {{ score }}
-  .progress
-    .done(style="width:{{progress}}%")
+
+#right.inline
+  .score
+    .dictionary
+    .total
+      .title SCORE:
+      | {{ score }}
+.progress
+
+#left.inline
   #visualizer
 
 #right.inline
   .language
-    span.language_select_label.inline Language:
-    span.selector
-      i.fa.fa-caret-down.language_select_down
-      ul.language_selector.inline(ng-class="{opened:open}" ng-click="open=!open")
-        li {{cur_lang.label}}
-        li(ng-repeat="lang in languages" ng-click="set_lang(lang)") {{lang.label}}
+    form.form
+      span.language_select_label.inline Language:
+      .form-group.inline
+        select.form-control(ng-options="lang.label for lang in languages" ng-model="cur_lang")
+
   .alphabet
     a.char.new_char(href="#/sandbox")
       img(src="img/dic/plus.png" width="100%" title="Add new gesture")
