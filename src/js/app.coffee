@@ -65,7 +65,7 @@ dictionary =
     "МАМА", "ТЕСТ", "ПРИВЕТ"
   ]
   en: [
-    "ABC", "FKL", "WAC"
+    "BACKLIGHT", "BLACKOUT", "DAYLIGHT", "COBALT", "COW", "GOTHIC", "HOBBY", "HICKUP", "POLICY", "PUBLIC", "QUOTA", "AUDIO", "AUDIT", "HOLIDAY", "DOUGHTY", "DIABLO", "DIALOG", "QUAHOG", "QUICKY", "QUEUE", "BLACK", "BLOCK", "POLYACID", "TABLOID", "BACKLOG", "CAPITOL", "JAIL", "GLIB", "YOGA", "AGO", "GABY",
   ]
 
 app = angular.module('app', ['ngRoute'])
@@ -171,29 +171,27 @@ app.controller "MainCtrl", ($rootScope, $scope)->
     Gesture.GesturesSet = $scope.alphabet
     $scope.new_word()
 
-  i = 0
   $scope.new_word = ()->
+    $scope.i = 0
     $scope.word = dictionary[$scope.cur_lang.dictionary][Math.floor(Math.random()*dictionary[$scope.cur_lang.dictionary].length)].split('').map (x)->
       name: x
       status: ''
     $scope.word[0].status = 'current'
-
   $scope.new_word()
 
   $scope.$watch 'recognized', (x)->
     $scope.word = $scope.word || []
-    if x == $scope.word[i].name
-      $scope.word[i].status = 'correct'
+    if x == $scope.word[$scope.i].name
+      $scope.word[$scope.i].status = 'correct'
       $scope.score++
-      i++
-      if (i == $scope.word.length)
-        i = 0
+      $scope.i++
+      if ($scope.i >= $scope.word.length)
         setTimeout ()->
           $scope.new_word()
           $scope.$apply()
         , 1000
-    else
-      $scope.word[i].status = 'wrong'
+      else
+        $scope.word[$scope.i].status = 'current'
 
   $rootScope.loaded = 'loaded'
 

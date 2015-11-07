@@ -70,7 +70,7 @@ init = function($scope) {
 
 dictionary = {
   ru: ["МАМА", "ТЕСТ", "ПРИВЕТ"],
-  en: ["ABC", "FKL", "WAC"]
+  en: ["BACKLIGHT", "BLACKOUT", "DAYLIGHT", "COBALT", "COW", "GOTHIC", "HOBBY", "HICKUP", "POLICY", "PUBLIC", "QUOTA", "AUDIO", "AUDIT", "HOLIDAY", "DOUGHTY", "DIABLO", "DIALOG", "QUAHOG", "QUICKY", "QUEUE", "BLACK", "BLOCK", "POLYACID", "TABLOID", "BACKLOG", "CAPITOL", "JAIL", "GLIB", "YOGA", "AGO", "GABY"]
 };
 
 app = angular.module('app', ['ngRoute']);
@@ -171,7 +171,6 @@ app.controller("IndexCtrl", function($rootScope, $scope, $location) {
 });
 
 app.controller("MainCtrl", function($rootScope, $scope) {
-  var i;
   init($scope);
   $scope.languages = [
     {
@@ -193,8 +192,8 @@ app.controller("MainCtrl", function($rootScope, $scope) {
     Gesture.GesturesSet = $scope.alphabet;
     return $scope.new_word();
   };
-  i = 0;
   $scope.new_word = function() {
+    $scope.i = 0;
     $scope.word = dictionary[$scope.cur_lang.dictionary][Math.floor(Math.random() * dictionary[$scope.cur_lang.dictionary].length)].split('').map(function(x) {
       return {
         name: x,
@@ -206,19 +205,18 @@ app.controller("MainCtrl", function($rootScope, $scope) {
   $scope.new_word();
   $scope.$watch('recognized', function(x) {
     $scope.word = $scope.word || [];
-    if (x === $scope.word[i].name) {
-      $scope.word[i].status = 'correct';
+    if (x === $scope.word[$scope.i].name) {
+      $scope.word[$scope.i].status = 'correct';
       $scope.score++;
-      i++;
-      if (i === $scope.word.length) {
-        i = 0;
+      $scope.i++;
+      if ($scope.i >= $scope.word.length) {
         return setTimeout(function() {
           $scope.new_word();
           return $scope.$apply();
         }, 1000);
+      } else {
+        return $scope.word[$scope.i].status = 'current';
       }
-    } else {
-      return $scope.word[i].status = 'wrong';
     }
   });
   return $rootScope.loaded = 'loaded';

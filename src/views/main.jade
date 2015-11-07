@@ -1,7 +1,7 @@
 #left.inline
   .task
     .word.inline
-      .char(ng-repeat="char in word track by $index" ng-class="char.status") {{char.name}}
+      .char(ng-repeat="char in word track by $index" ng-class="[char.status]") {{char.name}}
     .score.inline
       .dictionary
       .total
@@ -9,9 +9,7 @@
         | {{ score }}
   .progress
     .done(style="width:{{progress}}%")
-  #visual-container
-    #result {{recognized}}
-    #visualizer
+  #visualizer
 
 #right.inline
   .language

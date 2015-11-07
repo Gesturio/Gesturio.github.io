@@ -13,12 +13,12 @@ body>canvas{
 }
 
 #visual-container{
-  position: relative;
-  #result{
-    position: absolute;
-    font-size: 50px;
-    color: green;
-  }
+//  position: relative;
+//  #result{
+//    position: absolute;
+//    font-size: 50px;
+//    color: green;
+//  }
 }
 
 ul.instruction{
@@ -64,12 +64,17 @@ ul.instruction{
       font-size: 50px;
       color: #aaa;
       font-weight: bold;
+      min-width: 32px;
+      text-align: center;
+      margin: 0 3px;
+      letter-spacing: 0px;
+      line-height: 50px;
 
       &.correct {
         color: green;
       }
-      &.wrong {
-        color: red;
+      &.current {
+        border-bottom: 5px solid gray;
       }
     }
   }
