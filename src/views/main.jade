@@ -9,7 +9,9 @@
         | {{ score }}
   .progress
     .done(style="width:{{progress}}%")
-  #visualizer
+  #visual-container
+    #result {{recognized}}
+    #visualizer
 
 #right.inline
   .language
@@ -23,7 +25,9 @@
     a.char.new_char(href="#/sandbox")
       img(src="img/dic/plus.png" width="100%" title="Add new gesture")
     .char(ng-repeat="char in alphabet" ng-class="{current: char.name == recognized}")
-      img(src="img/dic/{{cur_lang.dictionary}}/{{char.file}}.png" width="100%" title="{{char.name}}")
+      img(ng-if="char.file" src="img/dic/{{cur_lang.dictionary}}/{{char.file}}.png" width="100%" title="{{char.name}}")
+      span.unimaged(ng-if="!char.file") {{char.name}}
+      img(ng-if="!char.file" src="img/dic/empty.png" width="100%" title="{{char.name}}")
       .status(ng-class="char.status")
   .description
     p.desc_info Gescture recognition status:

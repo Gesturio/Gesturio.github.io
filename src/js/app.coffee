@@ -1,40 +1,39 @@
 ###
 # Created by Aitem on 01.11.2015.
 ###
-# Init
-m = 0
-l = '_'
-decision = '_'
 
+params = []
 init = ($scope)->
+  m = 0
+  l = '_'
+  $scope.set = []
+
   Leap.loop (frame) ->
-    _throttle_apply = _.throttle ()->
-      name = decision.name
-      if (l == name)
+    _throttle_apply = _.throttle (name)->
+      if l == name
         m++
-        if m == 10
+        if m == 9
           $scope.recognized = name
           $scope.$apply()
-          console.log 'apply ', name
+          console.log 'Recognize: ', name
       else
         l = name
         m = 0
     , 20
 
     if frame.hands[0]
-      hand = frame.hands[0]
-      Gesture.getGestureParams hand
-      Gesture.getMetrics Gesture.getParamsArray()
+      Gesture.getGestureParams frame.hands[0]
+      params = Gesture.getParamsArray()
+      Gesture.getMetrics params
       decision = Gesture.makeDecision()
-      _throttle_apply()
+      _throttle_apply(decision.name)
 
-  visualizeHand = (controller) ->
+  ((controller) ->
     controller.use("playback",
-      recording: "pinch-bones-3-57fps.json.lz"
-      timeBetweenLoops: 1000
+      timeBetweenLoops: 10000
       pauseOnHand: true
     ).on "riggedHand.meshAdded", (handMesh, leapHand) ->
-      handMesh.material.opacity = 0.7
+      handMesh.material.opacity = 0.9
 
     overlay = controller.plugins.playback.player.overlay
     overlay.style.left = 0
@@ -42,15 +41,24 @@ init = ($scope)->
     overlay.style.padding = 0
     overlay.style.bottom = "13px"
     overlay.style.width = "180px"
-    controller.use "riggedHand", scale: 1.3
+    controller.use "riggedHand", scale: 1.5
 
     camera = controller.plugins.riggedHand.camera
-    camera.position.set 0, 10, -30
-    camera.lookAt new THREE.Vector3(5, 5, 0)
-  visualizeHand Leap.loopController
+    camera.position.set 7, 10, -30
+    camera.lookAt new THREE.Vector3(7, 10, 0)
 
-  # Pure JS =)
-  document.getElementById("visualizer").appendChild(document.getElementsByTagName("canvas")[0])
+    # fix canvas position
+    canvas = document.getElementsByTagName('canvas')[0]
+    visualizer = document.getElementById('visualizer')
+    if visualizer
+      canvas.style.width = visualizer.clientWidth+"px"
+      canvas.style.height = visualizer.clientHeight+"px"
+      canvas.style.top = visualizer.offsetTop+"px"
+      canvas.style.left = visualizer.offsetLeft+"px"
+    else
+      canvas.style.width = 0
+      canvas.style.height = 0
+  )(Leap.loopController)
 
 dictionary =
   ru: [
@@ -76,21 +84,53 @@ app.config ($routeProvider) ->
 app.directive 'keypressEvents', ($document, $rootScope) ->
   restrict: 'A'
   link: ->
-    console.log 'linked'
-    $document.bind 'keypress', (e) ->
-      $rootScope.$broadcast 'keypress', e, String.fromCharCode(e.which)
+    $document.bind 'keyup', (e) ->
+      $rootScope.$broadcast 'keyup', e, String.fromCharCode(e.which)
 
-app.controller "SandboxCtrl", ($rootScope, $scope, $location, $document)->
+app.controller "SandboxCtrl", ($rootScope, $scope, $location)->
+
   init($scope)
 
-  $rootScope.$on 'keypress', (e, a, key)->
-    console.log 'dfdfdfdf'
+  $scope.$on 'keyup', (e, a, key)->
+    if key == ' '
+      $scope.set.push params
+      $scope.$apply()
+      console.log $scope.set
 
-  $scope.keyup = ($event)->
-    console.log 'dfdfdfdfdfdf'
+  $scope.set = []
+  $scope.g =
+    params:
+      M: []
+      D: []
+
+  _round = (value, decimals)->
+    Number(Math.round(value+'e'+decimals)+'e-'+decimals)
 
   $scope.add = ()->
-    console.log 'added'
+    console.log $scope.set.length
+    $scope.g.params.M = $scope.set[0].map (x,i)->
+      t = $scope.set.reduce((acc, v)->
+        acc + v[i]
+      , 0)
+      t /= $scope.set.length
+      _round(t, 5)
+
+    $scope.g.params.D = $scope.set[0]
+      .map (x,i)->
+        t = $scope.set.reduce((acc, v)->
+          Math.pow(v[i] - $scope.g.params.M[i], 2)
+        , 0)
+        t /= $scope.set.length
+        if t >= 1
+          t / 100
+        if  t < 0.001
+          t *= 10 while t < 0.001
+        _round(t, 5)
+
+    GesturesSets.en.unshift $scope.g
+    $scope.set = []
+    console.log JSON.stringify($scope.g.params)
+    $location.path '/main'
 
   $rootScope.loaded = 'loaded'
 
@@ -137,7 +177,6 @@ app.controller "MainCtrl", ($rootScope, $scope)->
       name: x
       status: ''
     $scope.word[0].status = 'current'
-    i = 0
 
   $scope.new_word()
 
@@ -145,9 +184,10 @@ app.controller "MainCtrl", ($rootScope, $scope)->
     $scope.word = $scope.word || []
     if x == $scope.word[i].name
       $scope.word[i].status = 'correct'
-      i++
       $scope.score++
+      i++
       if (i == $scope.word.length)
+        i = 0
         setTimeout ()->
           $scope.new_word()
           $scope.$apply()

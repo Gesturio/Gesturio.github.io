@@ -1,5 +1,5 @@
 function etalon
-    gesture = 'L';
+    gesture = 'V';
     filename = strcat('captures/',gesture,'.csv');
     data = csvread(filename);
     D = [];
@@ -14,7 +14,7 @@ function etalon
        mi = mean(data(:, i));
        M=[M, mi];
        plot(i, mi, 'x', 'Color', 'red','MarkerSize', 15);
-       D=[D, var(data(:, i), 1)];
+       D=[D, var(data(:, i))];
        
     end
     

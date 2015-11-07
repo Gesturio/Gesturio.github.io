@@ -4,9 +4,23 @@ div(keypress-events)
 
   #right.inline
     p Введите имя и хотябы 10 раз заскринте
-    form.form.form-vertical(ng-submit="add()")
+    form.form.form-horizontal(ng-submit="add()")
       .form-group
-        label.control-label(for="name") Gesture name
-        input.form-control#name(ng-model="name")
+        label.control-label.col-sm-4(for="name") Gesture name:
+        .col-sm-4
+          input.form-control#name(ng-model="g.name" required)
 
-      button.btn.btn-default(type="submit") Add
+      .form-group
+        label.control-label.col-sm-4 Captures count:
+        .col-sm-4
+          p.form-control-static {{set.length}}
+
+      .form-group
+        .col-sm-4.col-sm-offset-4
+          button.btn.btn-default(type="submit") Add
+
+      .form-group
+        label.control-label.col-sm-4 Result:
+        .col-sm-4
+          pre {{ params | json}}
+
