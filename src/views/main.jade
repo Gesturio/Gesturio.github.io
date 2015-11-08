@@ -1,14 +1,9 @@
 #left.inline
   .task(title="Type word")
-    .word.inline
-      .char(ng-repeat="char in word track by $index" ng-class="[char.status]") {{char.name}}
+    .char(ng-repeat="char in word track by $index" ng-class="[char.status]") {{char.name}}
 
 #right.inline
-  .score
-    .dictionary
-    .total
-      .title SCORE:
-      | {{ score }}
+  .score SCORE: {{ score }}
 .progress
 
 #left.inline
@@ -22,8 +17,6 @@
         select.form-control(ng-options="lang.label for lang in languages" ng-model="cur_lang")
 
   .alphabet
-    a.char.new_char(href="#/sandbox")
-      img(src="img/dic/plus.png" width="100%" title="Add new gesture")
     .char(ng-repeat="char in alphabet" ng-class="{current: char.name == recognized}")
       img(ng-if="char.file" src="img/dic/{{cur_lang.dictionary}}/{{char.file}}.png" width="100%" title="{{char.name}}")
       span.unimaged(ng-if="!char.file") {{char.name}}

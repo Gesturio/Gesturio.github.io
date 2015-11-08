@@ -1,26 +1,26 @@
-div(keypress-events)
-  #left.inline
-    #visualizer
+#left.inline
+  .task(title="Response")
+    .word.inline
+      .recognized.char.correct {{recognized}}
 
-  #right.inline
-    p Введите имя и хотябы 10 раз заскринте
-    form.form.form-horizontal(ng-submit="add()")
-      .form-group
-        label.control-label.col-sm-4(for="name") Gesture name:
-        .col-sm-4
-          input.form-control#name(ng-model="g.name" required)
+#right.inline
+  .task
+    .word.inline
+      .recognized.char.correct Sandbox
+.progress
 
-      .form-group
-        label.control-label.col-sm-4 Captures count:
-        .col-sm-4
-          p.form-control-static {{set.length}}
+#left.inline
+  #visualizer
 
-      .form-group
-        .col-sm-4.col-sm-offset-4
-          button.btn.btn-default(type="submit") Add
+#right.inline
+  .language
+    a.back(href="#/main") Back to normal mode
 
-      .form-group
-        label.control-label.col-sm-4 Result:
-        .col-sm-4
-          pre {{ params | json}}
-
+  .alphabet
+    a.char.new_char(href="#/dev")
+      img(src="img/dic/plus.png" width="100%" title="Add new gesture")
+    .char(ng-repeat="char in alphabet" ng-class="{current: char.name == recognized}")
+      img(ng-if="char.file" src="img/dic/{{cur_lang.dictionary}}/{{char.file}}.png" width="100%" title="{{char.name}}")
+      span.unimaged(ng-if="!char.file") {{char.name}}
+      img(ng-if="!char.file" src="img/dic/empty.png" width="100%" title="{{char.name}}")
+      .status(ng-class="char.status")

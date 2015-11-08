@@ -1,0 +1,40 @@
+div(keypress-events)
+  #left.inline
+    .task(title="Response")
+      .word.inline
+        .recognized.char.correct Add new gesture
+  #right.inline
+    .task
+      .word.inline
+        .recognized.char.correct Sandbox
+  .progress
+
+  #left.inline
+    #visualizer
+
+  #right.inline
+    br
+    h2 Instructions
+    ol
+      li Введите название жеста
+      li Поместите вашу руку в рабочую область контроллера LeapMotion
+      li Изобразите жест который вы хотите добавить. Убедитесь, что LeapMotion корректно рапознал конфигурацию пальцев и положение ладони
+      li Свободной рукой нажмите кнопку пробела на клавиатре для запомнинаия конфигурации жеста
+      li Послеодовательно повторите шаги 2-4 как минимум 10 раз (я обычно делаю 40 измерений) добавляя незначительные допустимые отклонения (небольшие повороты ладони, небольшие изменения конфигурации пальцев)
+      li Нажмите кнопку "Add", после чего, ваш жест будет добавлен в SandBox mode.
+
+    br
+    form.form.form-horizontal(ng-submit="add()")
+      .form-group
+        label.control-label.col-sm-4(for="name") Gesture name:
+        .col-sm-4
+          input.form-control#name(ng-model="g.name" required)
+
+      .form-group
+        label.control-label.col-sm-4 Captures count:
+        .col-sm-4
+          p.form-control-static {{set.length}}
+
+      .form-group
+        .col-sm-4.col-sm-offset-4
+          button.btn.btn-default(type="submit") Add

@@ -9,6 +9,7 @@ dictionary =
   en: [
     "BACKLIGHT", "BLACKOUT", "DAYLIGHT", "COBALT", "COW", "GOTHIC", "HOBBY", "HICKUP", "POLICY", "PUBLIC", "QUOTA", "AUDIO", "AUDIT", "HOLIDAY", "DOUGHTY", "DIABLO", "DIALOG", "QUAHOG", "QUICKY", "QUEUE", "BLACK", "BLOCK", "POLYACID", "TABLOID", "BACKLOG", "CAPITOL", "JAIL", "GLIB", "YOGA", "AGO", "GABY",
   ]
+  _sandbox: []
 
 app = angular.module('app', ['ngRoute'])
 app
@@ -23,6 +24,9 @@ app
     rp.when '/sandbox',
       templateUrl: 'views/sandbox.html'
       controller: 'SandboxCtrl'
+    rp.when '/dev',
+      templateUrl: 'views/dev.html'
+      controller: 'DevCtrl'
 
   .directive 'keypressEvents', ($document, $rootScope) ->
     restrict: 'A'
@@ -37,19 +41,21 @@ app
       $location.path "main" if x != '_'
     $rootScope.loaded = 'loaded'
 
-  .controller "SandboxCtrl", ($rootScope, $scope, $location)->
+  .controller "DevCtrl", ($rootScope, $scope, $location)->
     init($scope)
-    $scope.$on 'keyup', (e, a, key)->
-      $scope.set.push params if key == ' '
 
     $scope.set = []
+    $scope.$on 'keyup', (e, a, key)->
+      $scope.set.push params if key == ' '
+      $scope.$apply()
+      console.log params
+
     $scope.g =
       params:
         M: []
         D: []
 
-    _round = (value, decimals)->
-      Number(Math.round(value+'e'+decimals)+'e-'+decimals)
+    _round = (value, decimals)-> Number(Math.round(value+'e'+decimals)+'e-'+decimals)
 
     $scope.add = ()->
       console.log $scope.set.length
@@ -60,17 +66,16 @@ app
         t /= $scope.set.length
         _round(t, 5)
 
-      $scope.g.params.D = $scope.set[0]
-        .map (x,i)->
-          t = $scope.set.reduce((acc, v)->
-            Math.pow(v[i] - $scope.g.params.M[i], 2)
-          , 0)
-          t /= $scope.set.length
-          if t >= 1
-            t / 100
-          if  t < 0.001
-            t *= 10 while t < 0.001
-          _round(t, 5)
+      $scope.g.params.D = $scope.set[0].map (x,i)->
+        t = $scope.set.reduce((acc, v)->
+          Math.pow(v[i] - $scope.g.params.M[i], 2)
+        , 0)
+        t /= $scope.set.length
+        if t >= 1
+          t / 100
+        if  t < 0.001
+          t *= 10 while t < 0.001
+        _round(t, 5)
 
       GesturesSets.en.unshift $scope.g
       $scope.set = []
@@ -79,18 +84,28 @@ app
 
     $rootScope.loaded = 'loaded'
 
-  .controller "MainCtrl", ($rootScope, $scope, $routeParams)->
+  .controller "SandboxCtrl", ($rootScope, $scope, $location)->
+    init($scope)
+    $scope.alphabet = GesturesSets._sandbox
+    Gesture.GesturesSet = $scope.alphabet
+
+    $scope.$watch 'recognized', (x)->
+      console.log x
+
+    $rootScope.loaded = 'loaded'
+
+  .controller "MainCtrl", ($rootScope, $scope, $location)->
     init($scope)
     $scope.languages = [
       {
-        label: 'English'
+        label: 'American'
         dictionary: 'en'
       }, {
         label: 'Russian'
         dictionary: 'ru'
       }, {
         label: 'Sandbox (dev mode)'
-        dictionary: '__sandbox'
+        dictionary: '_sandbox'
       }
     ]
     $scope.score = 0
@@ -99,9 +114,9 @@ app
     $scope.alphabet = GesturesSets.en
     Gesture.GesturesSet = $scope.alphabet
 
-    $scope.set_lang = (lang)->
-      $scope.cur_lang = lang
-      $scope.alphabet = GesturesSets[$scope.cur_lang.dictionary]
+    $scope.$watch 'cur_lang', (lang)->
+      $location.path "sandbox" if lang.dictionary == '_sandbox'
+      $scope.alphabet = GesturesSets[lang.dictionary]
       Gesture.GesturesSet = $scope.alphabet
       $scope.new_word()
 
