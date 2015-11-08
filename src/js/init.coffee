@@ -10,21 +10,15 @@ requirejs.config
     route: "angular-route"
     metrics: "metrics"
     bootstrap: "bootstrap.min"
-    fuzzyset: "fuzzyset"
-    linear: "linear"
     d3js: "d3.min"
     underscore: "underscore-min"
     transform: "leap.transform"
     leap_plugins: "leap-plugins-0.1.6.1"
-    gestures_sets: "gestures_sets"
     leap_rigged: "leap.rigged-hand-0.1.4.min"
 
   shim:
     app:
-      deps: ["angular", "route", "leap", "three", "leap_plugins", "leap_rigged", "d3js", "fuzzyset", "linear", "underscore", "gesture" ]
-
-    gesture:
-      deps: [ "gestures_sets", "linear", "fuzzyset", "metrics" ]
+      deps: ["angular", "route", "leap", "three", "leap_plugins", "leap_rigged", "d3js", "underscore", "gesture" ]
 
     transform:
       deps: [ "leap" ]
