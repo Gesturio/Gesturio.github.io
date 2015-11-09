@@ -119,9 +119,15 @@ app
 
     $scope.new_word = ()->
       $scope.i = 0
-      $scope.word = dictionary[$scope.cur_lang.dictionary][Math.floor(Math.random()*dictionary[$scope.cur_lang.dictionary].length)].split('').map (x)->
+      $scope.word =
+      nw = dictionary[$scope.cur_lang.dictionary][Math.floor(Math.random()*dictionary[$scope.cur_lang.dictionary].length)].split('').map (x)->
         name: x
         status: ''
+      until nw == $scope.word
+        nw = dictionary[$scope.cur_lang.dictionary][Math.floor(Math.random()*dictionary[$scope.cur_lang.dictionary].length)].split('').map (x)->
+          name: x
+          status: ''
+      $scope.word = nw
       $scope.word[0].status = 'current'
     $scope.new_word()
 
