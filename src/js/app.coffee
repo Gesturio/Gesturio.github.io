@@ -3,12 +3,8 @@
 ###
 
 dictionary =
-  ru: [
-    "МАМА", "ТЕСТ", "ПРИВЕТ"
-  ]
-  en: [
-    "BACKLIGHT", "BLACKOUT", "DAYLIGHT", "COBALT", "COW", "GOTHIC", "HOBBY", "HICKUP", "POLICY", "PUBLIC", "QUOTA", "AUDIO", "AUDIT", "HOLIDAY", "DOUGHTY", "DIABLO", "DIALOG", "QUAHOG", "QUICKY", "QUEUE", "BLACK", "BLOCK", "POLYACID", "TABLOID", "BACKLOG", "CAPITOL", "JAIL", "GLIB", "YOGA", "AGO", "GABY",
-  ]
+  ru: ["МАМА", "ТЕСТ", "ПРИВЕТ", "АВГУСТ", "АВОСЬ", "АЗОТ", "АВЕНЮ", "АНГЕЛ", "ВЕРСТА", "ВЕСЫ", "ВОЛЬЕР", "ВОКАЛ", "ВОКЗАЛ", "ВОЛНА", "ВОР", "ВОПЛЬ", "ВОСЕМЬ", "АВТО", "АМПЕР", "ВЕНЧАТЬ", "ВЕРТУШКА", "ВЗМЫТЬ", "ВЖАТЬСЯ", "КАШЕЛЬ", "КАРУСЕЛЬ", "КАРТОН", "КАПЕРСЫ", "ЗРАЧОК", "ЗАНЯТО", "ЗАНЯТЬ", "ЗАГНУТЬ", "КАМЗОЛ", "КАЛЬЯН", "ГОСТЬЯ", "ОКРУГ", "ОМЛЕТ", "НУТРО", "ОКУЛЯР", "МЯСКО", "МЕШОК", "МЕТРО", "ЛЕСТЬ", "КОНЮХ", "ЗРЕЛОСТЬ", "МОНСТР", "МОЛЧУН", "ПОЛЫМЯ", "ПОЧЕТ", "ШНУРОВКА", "ПЛАСТЫРЬ", "СУМОЧКА", "ЧОКАНЬЕ", "ПЛАНШЕТ", "ЖУРНАЛ", "УТЕЧКА", "ЗАТВОР", "ПЛАМЯ", "ЛОМКА", "ПОЧТА", "ХОЛСТ", "ШАЛУНЬЯ", "ЭКЗАМЕН", "ПОВЕСТКА", "СВЕТОМУЗЫКА", "СТУПЕНЬКА", "ЛЕСОПАРК", "КОМПЬЮТЕР"]
+  en: ["BACKLIGHT", "BLACKOUT", "DAYLIGHT", "COBALT", "COW", "GOTHIC", "HOBBY", "HICKUP", "POLICY", "PUBLIC", "QUOTA", "AUDIO", "AUDIT", "HOLIDAY", "DOUGHTY", "DIABLO", "DIALOG", "QUAHOG", "QUICKY", "QUEUE", "BLACK", "BLOCK", "POLYACID", "TABLOID", "BACKLOG", "CAPITOL", "JAIL", "GLIB", "YOGA", "AGO", "GABY", "PATY", "FOCAL", "FLIGHT", "FLYBACK", "PUBLICA", "TOPIC", "OPTIC"]
   _sandbox: []
 
 app = angular.module('app', ['ngRoute'])
@@ -46,9 +42,10 @@ app
 
     $scope.set = []
     $scope.$on 'keyup', (e, a, key)->
-      $scope.set.push params if key == ' '
-      $scope.$apply()
-      console.log params
+      if key == ' '
+        $scope.set.push params
+        $scope.$apply()
+        console.log params
 
     $scope.g =
       params:
