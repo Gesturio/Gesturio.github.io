@@ -74,15 +74,16 @@ app
           t *= 10 while t < 0.001
         _round(t, 5)
 
-      GesturesSets.en.unshift $scope.g
+      GesturesSets._sandbox.unshift $scope.g
       $scope.set = []
       console.log JSON.stringify($scope.g.params)
-      $location.path '/main'
+      $location.path '/sandbox'
 
     $rootScope.loaded = 'loaded'
 
   .controller "SandboxCtrl", ($rootScope, $scope, $location)->
     init($scope)
+    $scope.cur_lang = '_sandbox'
     $scope.alphabet = GesturesSets._sandbox
     Gesture.GesturesSet = $scope.alphabet
 

@@ -20,7 +20,7 @@
     a.char.new_char(href="#/dev")
       img(src="img/dic/plus.png" width="100%" title="Add new gesture")
     .char(ng-repeat="char in alphabet" ng-class="{current: char.name == recognized}")
-      img(ng-if="char.file" src="img/dic/{{cur_lang.dictionary}}/{{char.file}}.png" width="100%" title="{{char.name}}")
-      span.unimaged(ng-if="!char.file") {{char.name}}
+      img(ng-if="char.file" src="img/dic/{{cur_lang}}/{{char.file}}.png" width="100%" title="{{char.name}}")
+      span.unimaged {{char.name}}
       img(ng-if="!char.file" src="img/dic/empty.png" width="100%" title="{{char.name}}")
       .status(ng-class="char.status")
