@@ -1,4 +1,4 @@
-# Gesturion
+# Gesturio
 Special for #3DJam
 
 ## Installation
